@@ -44,6 +44,15 @@ ul {font-family: "Amiri";
       color: #333333;
       fill: none;
   }
-  
+
+.content {
+    max-width: 800px;
+    margin: auto;
+}
+
+.svg-container {
+    margin-bottom: 1em;
+    width: 100%; 
+}
 
   
