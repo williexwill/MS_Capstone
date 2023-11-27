@@ -80,10 +80,13 @@ const tooltipContainer = svg4Container
   .attr("class", "tooltip-container");
 
 // Load your dataset
-d3.csv("data/BigNumbers_Clean.csv", (data) => {
+d3.csv("data/BigNumbers_Clean.csv", (data, i) => {
+  // Assign an index to each data point
+  data.index = i;
+
   // Highlight specific pixels based on the dataset
-  const highlights = svg4.selectAll("rect.highlight")
-    .data(data)
+  svg4.selectAll("rect.highlight")
+    .data([data]) // Use an array with a single element for each data point
     .enter()
     .append("rect")
     .attr("class", "highlight")
@@ -95,58 +98,45 @@ d3.csv("data/BigNumbers_Clean.csv", (data) => {
     .on("mouseover", handleMouseOver)
     .on("mouseout", handleMouseOut);
 
-  // Create tooltips with unique data-index attribute
-  const tooltips = tooltipContainer.selectAll(".dynamic-tooltip")
-    .data(data)
-    .enter()
-    .append("div")
+  // Create lines and dynamic tooltips in the margins
+  const tooltipMargin = 10; // Adjust as needed
+
+  const xPosition = data.Number % 800 + margin.left + tooltipMargin;
+  const yPosition = Math.floor(data.Number / 800) + margin.top + tooltipMargin;
+
+  // Append foreignObject for the dynamic tooltip to the tooltipContainer
+  const foreignObject = tooltipContainer.append("div")
     .attr("class", "dynamic-tooltip")
-    .attr("data-index", (d, i) => i) // Use index as a unique identifier
     .style("position", "absolute")
-    .style("left", 0)
-    .style("top", 0)
-    .style("opacity", 0)
+    .style("left", `${svg4Container.node().getBoundingClientRect().left + xPosition}px`)
+    .style("top", `${svg4Container.node().getBoundingClientRect().top + yPosition}px`)
+    .style("opacity", 0); // Set initial opacity to 0
+
+  // Append xHTML content to the foreignObject
+  const tooltipDiv = foreignObject.append("xhtml:div")
     .style("background", "white")
     .style("padding", "5px")
     .style("border", "1px solid black");
 
-  tooltips.append("p")
-    .text(d => `Number: ${d.Number}`);
+  // Add text to the tooltip
+  tooltipDiv.append("p")
+    .text(`Number: ${data.Number}`);
 
-  tooltips.append("p")
-    .text(d => `Description: ${d.Description_short}`);
-
-  tooltips.each(function () {
-    const tooltipHeight = this.getBoundingClientRect().height;
-    d3.select(this).style("height", `${tooltipHeight}px`);
-  });
+  tooltipDiv.append("p")
+    .text(`Description: ${data.Description_short}`);
 
   // Store the foreignObject in the data
-  highlights.each(function (d) {
-    d.foreignObject = tooltipContainer.select(`[data-index="${d.index}"]`);
-  });
-
-  // Mouseover event handler
-  function handleMouseOver(d) {
-    // Select the corresponding tooltip using data-index attribute
-    const tooltip = tooltipContainer.select(`[data-index="${d.index}"]`);
-
-    // Transition the tooltip's opacity to full over 0.5 seconds
-    tooltip.transition().duration(500).style("opacity", 1);
-
-    // Log information
-    console.log("mouseover", d.index);
-  }
-
-  // Mouseout event handler
-  function handleMouseOut(d) {
-    // Select the corresponding tooltip using data-index attribute
-    const tooltip = tooltipContainer.select(`[data-index="${d.index}"]`);
-
-    // Transition the tooltip's opacity to 0 over 2 seconds
-    tooltip.transition().duration(2000).style("opacity", 0);
-
-    // Log information
-    console.log("mouseout", d.index);
-  }
+  data.foreignObject = foreignObject;
 });
+
+// Handle mouseover event
+function handleMouseOver(data) {
+  data.foreignObject.style("opacity", 1); // Set opacity to 1 on mouseover
+  console.log("mouseover", data.index);
+}
+
+// Handle mouseout event
+function handleMouseOut(data) {
+  data.foreignObject.style("opacity", 0); // Set opacity to 0 on mouseout
+  console.log("mouseout", data.index);
+}
