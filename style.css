@@ -64,3 +64,29 @@ ul {font-family: "Amiri";
     border-radius: 2px;
   }
  
+  .tooltip-container {
+    opacity: 0;
+    position: absolute;
+    z-index: 9999;
+    background: white;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+#tooltip-svg5 {
+  opacity: 0;
+  position: absolute;
+  z-index: 9999;
+  background: white;
+  padding: 5px;
+  border: 1px solid black;
+}
+
+#tooltip-svg6 {
+  opacity: 0;
+  position: absolute;
+  z-index: 9999;
+  background: white;
+  padding: 5px;
+  border: 1px solid black;
+}
