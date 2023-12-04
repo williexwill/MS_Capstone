@@ -90,3 +90,7 @@ ul {font-family: "Amiri";
   padding: 5px;
   border: 1px solid black;
 }
+
+#compare-button {
+  display: inline-block;
+}
