@@ -364,9 +364,11 @@ const svg7 = d3.select("#svg-container-7")
 // Load both datasets
 Promise.all([
   d3.csv("data/BLS_2021_clean.csv", d => ({
+    Category: d.Category,
     Spending: +d.Spending
   })),
   d3.csv("data/StLou_clean.csv", d => ({
+    Category: d.Department, // Rename Department to Category for consistency
     Spending: +d.Spending
   }))
 ]).then(data => {
@@ -374,116 +376,109 @@ Promise.all([
 
   // Combine datasets and add a 'Set' property
   const combinedData = [
-    ...dataBLS.map(d => ({ Spending: d.Spending, Set: 'Yearly household expenses' })),
-    ...dataStLou.map(d => ({ Spending: d.Spending, Set: 'Yearly municipal expenses' }))
+    ...dataBLS.map(d => ({ Category: d.Category, Spending: d.Spending, Set: 'Yearly household expenses' })),
+    ...dataStLou.map(d => ({ Category: d.Category, Spending: d.Spending, Set: 'Yearly municipal expenses' }))
   ];
 
   console.log('Combined Data:', combinedData);
 
-  // Function to define the categorical color scale for SVG7
-  const colorScaleSVG7 = d3.scaleOrdinal()
-    .range(["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]);
+  // Set up scales and axes for SVG7
+  const xScale7 = d3.scaleBand()
+    .domain([...new Set(combinedData.map(d => d.Set))])
+    .range([0, 600])
+    .padding(0.1);
 
- // Group the data by the 'Set' property
-const groupedData = combinedData.reduce((result, item) => {
-  const set = item.Set;
-  if (!result[set]) {
-    result[set] = [];
-  }
-  result[set].push(item.Spending);
-  return result;
-}, {});
+  const yScale7 = d3.scaleLinear()
+    .domain([0, 1000000000])
+    .range([400, 0])
+    .nice();
 
-// Convert the grouped data to an array of objects with 'Set' and values
-const stackDataArray = Object.keys(groupedData).map(set => ({
-  Set: set,
-  ...groupedData[set].reduce((acc, value, index) => {
-    acc[`value${index + 1}`] = value;
-    return acc;
-  }, {})
-}));
+  const xAxis7 = d3.axisBottom(xScale7)
+    .tickSize(0);
 
-const stackedData = d3.stack().keys(Object.keys(groupedData))(stackDataArray);
+  const yAxis7 = d3.axisLeft(yScale7)
+    .ticks(5)
+    .tickSizeInner(-600)
+    .tickSizeOuter(0);
 
-// Set up scales and axes for SVG7
-const xScale7 = d3.scaleBand()
-  .domain([...new Set(combinedData.map(d => d.Set))])
-  .range([0, 600])
-  .padding(0.1);
+  // Append X and Y axes for SVG7
+  svg7.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(50, ${400})`)
+    .call(xAxis7)
+    .selectAll("text")
+    .attr("y", 10)
+    .attr("x", -5)
+    .attr("dy", ".35em")
+    .attr("transform", "rotate(-45)")
+    .style("text-anchor", "end");
 
-const yScale7 = d3.scaleLinear()
-  .domain([0, d3.max(stackedData, d => d3.max(d, d => d[1]))]) // Adjusted yScale domain
-  .range([400, 0])
-  .nice();
+  svg7.append("g")
+    .attr("class", "y-axis")
+    .attr("transform", `translate(50, 0)`)
+    .call(yAxis7);
 
-const xAxis7 = d3.axisBottom(xScale7)
-  .tickSize(0);
+  // Stack the data
+  const stack = d3.stack()
+    .keys(['Spending'])
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone);
 
-const yAxis7 = d3.axisLeft(yScale7)
-  .ticks(5)
-  .tickSizeInner(-600)
-  .tickSizeOuter(0);
+  const stackedData = stack(combinedData);
 
-// Append X and Y axes for SVG7
-svg7.append("g")
-  .attr("class", "x-axis")
-  .attr("transform", `translate(50, ${400})`)
-  .call(xAxis7)
-  .selectAll("text")
-  .attr("y", 10)
-  .attr("x", -5)
-  .attr("dy", ".35em")
-  .attr("transform", "rotate(-45)")
-  .style("text-anchor", "end");
+// Function to define the categorical color scale for SVG7
+const colorScaleSVG7 = d3.scaleOrdinal()
+  .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
 
-svg7.append("g")
-  .attr("class", "y-axis")
-  .attr("transform", `translate(50, 0)`)
-  .call(yAxis7);
-
-// Append stacked bars for BLS and StLou data in SVG7 with categorical color
-svg7.selectAll(".set")
-  .data(stackedData)
-  .enter().append("g")
-  .attr("class", "set")
-  .attr("fill", d => colorScaleSVG7(d.key)) // Use Set for color assignment
-
-  // For each set, create a group for individual categories
-  .selectAll("rect")
-  .data(d => d)
-  .enter().append("rect")
-  .attr("x", d => xScale7(d.data[0])) // X position based on the first element in the array (which is the key)
-  .attr("width", xScale7.bandwidth())
-  .attr("y", d => yScale7(d[1])) // Top of the bar
-  .attr("height", d => yScale7(d[0]) - yScale7(d[1])) // Height is calculated based on the stack
-  .on("mouseover", function (event, d) {
-    const set = d3.select(this.parentNode).datum().key; // Access the key directly
-    handleMouseOverSVG7(event, { Spending: d[1] - d[0] }, set);
-  })
-  .on("mouseout", function () {
-    const set = d3.select(this.parentNode).datum().key; // Access the key directly
-    d3.select(`#tooltip-svg7-${set}`).transition().duration(500).style("opacity", 0);
-  });
+  // Append stacked bars for BLS and StLou data in SVG7 with categorical color
+  svg7.selectAll(".bar")
+    .data(stackedData)
+    .enter().append("g")
+    .attr("class", d => `bar ${d.key.toLowerCase()}`)
+    .selectAll("rect")
+    .data(d => d)
+    .enter().append("rect")
+    .attr("x", d => 50 + xScale7(d.data.Set))
+    .attr("width", xScale7.bandwidth())
+    .attr("y", d => yScale7(d[1]))
+    .attr("height", d => yScale7(d[0]) - yScale7(d[1]))
+    .attr("fill", d => {
+      const color = colorScaleSVG7(d.data.Category);
+      console.log(`Category: ${d.data.Category}, Color: ${color}`);
+      return color;
+    })
+    .on("mouseover", function (event, d) {
+      const set = d.data.Set;
+      handleMouseOverSVG7(event, d.data, set);
+    })
+    .on("mouseout", function () {
+      const setClass = d3.select(this).attr("class");
+      if (setClass) {
+        const set = setClass.split(" ")[1]; // Extract set from class if it exists
+        d3.select(`#tooltip-svg7-${set}`).transition().duration(500).style("opacity", 0);
+      }
+    });
 });
 
-// Function to format number as currency
-const formatCurrency = new Intl.NumberFormat('en-US', {
+ // Function to format number as currency
+ const formatCurrency = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
 });
 
 // Function to handle mouseover event for SVG7
 const handleMouseOverSVG7 = (event, data, set) => {
-  console.log('Mouseover Event Triggered');
+  console.log('Mouseover Event Triggered'); 
   const tooltip7 = d3.select(`#tooltip-svg7-${set.replace(/\s+/g, '').toLowerCase()}`);
   console.log('Tooltip Container:', tooltip7.node());
   tooltip7.transition().duration(200).style("opacity", 0.9);
 
   tooltip7.html(`
     <p>Set: ${set}</p>
+    <p>Category: ${data.Category}</p>
     <p>Spending: ${formatCurrency.format(data.Spending)}</p>
   `)
     .style("left", `${event.pageX}px`)
     .style("top", `${event.pageY - 28}px`);
-  console.log('Mouse Event Coordinates:', event.pageX, event.pageY);
+    console.log('Mouse Event Coordinates:', event.pageX, event.pageY);
 };

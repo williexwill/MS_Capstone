@@ -185,7 +185,7 @@ d3.csv("data/StLou_clean.csv", d => ({
     .padding(0.1);
 
   const yScale = d3.scaleLinear()
-    .domain([0, 650000000])
+    .domain([0, 300000000])
     .range([400, 0])
     .nice();
 
@@ -329,7 +329,7 @@ d3.csv("data/BLS_2021_clean.csv", d => ({
       .style("top", `${event.pageY - 28}px`);
   };
 
-// Function to define the categorical color scale for SVG6
+// Function to define the categorical color scale for SVG5
 const colorScaleSVG6 = d3.scaleOrdinal()
   .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
 
@@ -361,60 +361,16 @@ const svg7 = d3.select("#svg-container-7")
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// Load both datasets
-Promise.all([
-  d3.csv("data/BLS_2021_clean.csv", d => ({
-    Spending: +d.Spending
-  })),
-  d3.csv("data/StLou_clean.csv", d => ({
-    Spending: +d.Spending
-  }))
-]).then(data => {
-  const [dataBLS, dataStLou] = data;
-
-  // Combine datasets and add a 'Set' property
-  const combinedData = [
-    ...dataBLS.map(d => ({ Spending: d.Spending, Set: 'Yearly household expenses' })),
-    ...dataStLou.map(d => ({ Spending: d.Spending, Set: 'Yearly municipal expenses' }))
-  ];
-
-  console.log('Combined Data:', combinedData);
-
-  // Function to define the categorical color scale for SVG7
-  const colorScaleSVG7 = d3.scaleOrdinal()
-    .range(["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]);
-
- // Group the data by the 'Set' property
-const groupedData = combinedData.reduce((result, item) => {
-  const set = item.Set;
-  if (!result[set]) {
-    result[set] = [];
-  }
-  result[set].push(item.Spending);
-  return result;
-}, {});
-
-// Convert the grouped data to an array of objects with 'Set' and values
-const stackDataArray = Object.keys(groupedData).map(set => ({
-  Set: set,
-  ...groupedData[set].reduce((acc, value, index) => {
-    acc[`value${index + 1}`] = value;
-    return acc;
-  }, {})
-}));
-
-const stackedData = d3.stack().keys(Object.keys(groupedData))(stackDataArray);
+// Define yScale7 outside the Promise callback
+const yScale7 = d3.scaleLinear()
+  .domain([0, 100000]) // Set initial y-axis domain to 0–100,000
+  .range([400, 0])
+  .nice();
 
 // Set up scales and axes for SVG7
 const xScale7 = d3.scaleBand()
-  .domain([...new Set(combinedData.map(d => d.Set))])
   .range([0, 600])
   .padding(0.1);
-
-const yScale7 = d3.scaleLinear()
-  .domain([0, d3.max(stackedData, d => d3.max(d, d => d[1]))]) // Adjusted yScale domain
-  .range([400, 0])
-  .nice();
 
 const xAxis7 = d3.axisBottom(xScale7)
   .tickSize(0);
@@ -427,63 +383,125 @@ const yAxis7 = d3.axisLeft(yScale7)
 // Append X and Y axes for SVG7
 svg7.append("g")
   .attr("class", "x-axis")
-  .attr("transform", `translate(50, ${400})`)
-  .call(xAxis7)
-  .selectAll("text")
-  .attr("y", 10)
-  .attr("x", -5)
-  .attr("dy", ".35em")
-  .attr("transform", "rotate(-45)")
-  .style("text-anchor", "end");
+  .attr("transform", `translate(50, ${400})`);
 
 svg7.append("g")
   .attr("class", "y-axis")
-  .attr("transform", `translate(50, 0)`)
-  .call(yAxis7);
+  .attr("transform", `translate(50, 0)`);
 
-// Append stacked bars for BLS and StLou data in SVG7 with categorical color
-svg7.selectAll(".set")
-  .data(stackedData)
-  .enter().append("g")
-  .attr("class", "set")
-  .attr("fill", d => colorScaleSVG7(d.key)) // Use Set for color assignment
+// Load both datasets
+Promise.all([
+  d3.csv("data/BLS_2021_clean.csv", d => ({
+    Category: d.Category,
+    Spending: +d.Spending
+  })),
+  d3.csv("data/StLou_clean.csv", d => ({
+    Category: d.Department,
+    Spending: +d.Spending
+  }))
+]).then(data => {
+  const [dataBLS, dataStLou] = data;
 
-  // For each set, create a group for individual categories
-  .selectAll("rect")
-  .data(d => d)
-  .enter().append("rect")
-  .attr("x", d => xScale7(d.data[0])) // X position based on the first element in the array (which is the key)
-  .attr("width", xScale7.bandwidth())
-  .attr("y", d => yScale7(d[1])) // Top of the bar
-  .attr("height", d => yScale7(d[0]) - yScale7(d[1])) // Height is calculated based on the stack
-  .on("mouseover", function (event, d) {
-    const set = d3.select(this.parentNode).datum().key; // Access the key directly
-    handleMouseOverSVG7(event, { Spending: d[1] - d[0] }, set);
-  })
-  .on("mouseout", function () {
-    const set = d3.select(this.parentNode).datum().key; // Access the key directly
-    d3.select(`#tooltip-svg7-${set}`).transition().duration(500).style("opacity", 0);
-  });
+  // Combine datasets and add a 'Set' property
+  const combinedData = [
+    ...dataBLS.map(d => ({ Category: d.Category, Spending: d.Spending, Set: 'Yearly household expenses' })),
+    ...dataStLou.map(d => ({ Category: d.Category, Spending: d.Spending, Set: 'Yearly municipal expenses' }))
+  ];
+
+  // Update xScale domain based on sets
+  xScale7.domain([...new Set(combinedData.map(d => d.Set))]);
+
+  // Append X and Y axes with updated scales
+  svg7.select(".x-axis")
+    .call(xAxis7)
+    .selectAll("text")
+    .attr("y", 10)
+    .attr("x", -5)
+    .attr("dy", ".35em")
+    .attr("transform", "rotate(-45)")
+    .style("text-anchor", "end");
+
+  svg7.select(".y-axis")
+    .call(yAxis7);
+
+  // Stack the data
+  const stack = d3.stack()
+    .keys(['Spending'])
+    .order(d3.stackOrderReverse)
+    .offset(d3.stackOffsetNone);
+
+  const stackedData = stack(combinedData);
+
+  // Function to define the categorical color scale for SVG7
+  const colorScaleSVG7 = d3.scaleOrdinal()
+    .range(["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]);
+
+  // Append stacked bars for BLS data in SVG7 with categorical color
+  const barsHousehold = svg7.selectAll(".bar-household")
+    .data(stackedData.filter(d => d.key === "Spending"))
+    .enter().append("g")
+    .attr("class", d => `bar-household ${d.key.toLowerCase()}`)
+    .selectAll("rect")
+    .data(d => d)
+    .enter().append("rect")
+    .attr("class", d => `bar-household ${d.data.Set.replace(/\s+/g, '').toLowerCase()}`)
+    .attr("x", d => 50 + xScale7(d.data.Set))
+    .attr("width", xScale7.bandwidth())
+    .attr("y", d => yScale7(d[1]))
+    .attr("height", d => yScale7(d[0]) - yScale7(d[1]))
+    .attr("fill", d => colorScaleSVG7(d.data.Category))
+    .style("opacity", d => (d.data.Set === 'Yearly municipal expenses') ? 0 : 1); // Set initial opacity to 0 for 'Yearly municipal expenses'
+
+  // Function to handle mouseover event for SVG7
+  const handleMouseOverSVG7 = (event, data, set) => {
+    const tooltip7 = d3.select(`#tooltip-svg7-${set.replace(/\s+/g, '').toLowerCase()}`);
+    tooltip7.transition().duration(200).style("opacity", 0.9);
+
+    tooltip7.html(`
+      <p>Set: ${set}</p>
+      <p>Category: ${data.Category}</p>
+      <p>Spending: ${formatCurrency.format(data.Spending)}</p>
+    `)
+      .style("left", `${event.pageX}px`)
+      .style("top", `${event.pageY - 28}px`);
+  };
 });
 
-// Function to format number as currency
-const formatCurrency = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
+// Add a click event listener to the "Compare" button
+document.getElementById('compare-button').addEventListener('click', () => {
+  // Remove the "Compare" button
+  d3.select('#compare-button').remove();
+
+  // Transition for y-axis domain change
+  yScale7.domain([0, 1000000000]).nice();
+
+  // Update the y-axis with the new scale
+  svg7.select(".y-axis")
+    .transition()
+    .duration(1000)
+    .call(yAxis7);
+
+  // Append stacked bars for municipal data in SVG7 with categorical color
+  const barsMunicipal = svg7.selectAll(".bar-municipal")
+    .data(stack(combinedData.filter(d => d.Set === 'Yearly municipal expenses')))
+    .enter().append("g")
+    .attr("class", d => `bar-municipal ${d.key.toLowerCase()}`)
+    .selectAll("rect")
+    .data(d => d)
+    .enter().append("rect")
+    .attr("class", d => `bar-municipal ${d.data.Set.replace(/\s+/g, '').toLowerCase()}`)
+    .attr("x", d => 50 + xScale7(d.data.Set))
+    .attr("width", xScale7.bandwidth())
+    .attr("y", d => yScale7(d[1]))
+    .attr("height", d => yScale7(d[0]) - yScale7(d[1]))
+    .attr("fill", d => colorScaleSVG7(d.data.Category))
+    .style("opacity", 1) // Adjust opacity for the desired set
+    .transition()
+    .duration(1000)
+    .style("opacity", 1); // Set final opacity to 1 for 'Yearly municipal expenses'
 });
 
-// Function to handle mouseover event for SVG7
-const handleMouseOverSVG7 = (event, data, set) => {
-  console.log('Mouseover Event Triggered');
-  const tooltip7 = d3.select(`#tooltip-svg7-${set.replace(/\s+/g, '').toLowerCase()}`);
-  console.log('Tooltip Container:', tooltip7.node());
-  tooltip7.transition().duration(200).style("opacity", 0.9);
 
-  tooltip7.html(`
-    <p>Set: ${set}</p>
-    <p>Spending: ${formatCurrency.format(data.Spending)}</p>
-  `)
-    .style("left", `${event.pageX}px`)
-    .style("top", `${event.pageY - 28}px`);
-  console.log('Mouse Event Coordinates:', event.pageX, event.pageY);
-};
+
+
+
