@@ -1,4 +1,6 @@
-const margin = { top: 50, right: 50, bottom: 50, left: 50 }; // Add margins as needed
+//Set universal variables
+const margin = { top: 50, right: 50, bottom: 50, left: 50 }; // Add margins 
+
 
 //SVG 1
 const svg1 = d3.select("#svg-container-1")
@@ -352,192 +354,264 @@ svg6.selectAll(".bar")
 });
 });
 
-// SVG 7 - Combined Stacked Bar Chart
-//Load and combine and order data:
-d3.csv("data/BLS_2021_clean.csv", d => ({
-    Category: d.Category,
-    Spending: +d.Spending
-  })).then(dataBLS => {
-    dataBLS.sort((a, b) => b.Spending - a.Spending); // Sort in descending order
+// // SVG 7 - Combined Stacked Bar Chart
+// //Load and combine and order data:
+// d3.csv("data/BLS_2021_clean.csv", d => ({
+//     Category: d.Category,
+//     Spending: +d.Spending
+//   })).then(dataBLS => {
+//     dataBLS.sort((a, b) => b.Spending - a.Spending); // Sort in descending order
     
-    const totalSpendingBLS = d3.sum(dataBLS, d => d.Spending);
+//     const totalSpendingBLS = d3.sum(dataBLS, d => d.Spending);
 
-    dataBLS.forEach(d => d.totalSpendingBySet = totalSpendingBLS);
+//     dataBLS.forEach(d => d.totalSpendingBySet = totalSpendingBLS);
     
-    // Load the second dataset and sort by spending
-    return d3.csv("data/StLou_clean.csv", d => ({
-      Category: d.Department,
-      Spending: +d.Spending
-    })).then(dataStLou => {
-      dataStLou.sort((a, b) => b.Spending - a.Spending); // Sort in descending order
+//     // Load the second dataset and sort by spending
+//     return d3.csv("data/StLou_clean.csv", d => ({
+//       Category: d.Department,
+//       Spending: +d.Spending
+//     })).then(dataStLou => {
+//       dataStLou.sort((a, b) => b.Spending - a.Spending); // Sort in descending order
   
-      const totalSpendingStLou = d3.sum(dataStLou, d => d.Spending);
+//       const totalSpendingStLou = d3.sum(dataStLou, d => d.Spending);
 
-      dataStLou.forEach(d => d.totalSpendingBySet = totalSpendingStLou);
+//       dataStLou.forEach(d => d.totalSpendingBySet = totalSpendingStLou);
 
-    // Combine datasets and add a 'Set' property
-    const combinedData = [
-        ...dataBLS.map(d => ({ Category: d.Category, Spending: d.Spending, totalSpendingBySet: d.totalSpendingBySet, Set: 'Yearly household expenses' })),
-        ...dataStLou.map(d => ({ Category: d.Category, Spending: d.Spending, totalSpendingBySet: d.totalSpendingBySet, Set: 'Yearly municipal expenses' }))
-      ];
-    console.log(combinedData);
+//     // Combine datasets and add a 'Set' property
+//     const combinedData = [
+//         ...dataBLS.map(d => ({ Category: d.Category, Spending: d.Spending, totalSpendingBySet: d.totalSpendingBySet, Set: 'Yearly household expenses' })),
+//         ...dataStLou.map(d => ({ Category: d.Category, Spending: d.Spending, totalSpendingBySet: d.totalSpendingBySet, Set: 'Yearly municipal expenses' }))
+//       ];
+//     console.log(combinedData);
       
     
-    //Isolate Set names 
-    const setNames = combinedData.map(d => d.Set);
+//     //Isolate Set names 
+//     const setNames = combinedData.map(d => d.Set);
 
-    //Isolate Category names 
-    const categoryNames = combinedData.map(d =>d.Category);
-    console.log('Category Names array:', categoryNames);
+//     //Isolate Category names 
+//     const categoryNames = combinedData.map(d =>d.Category);
+//     console.log('Category Names array:', categoryNames);
 
-    //Isolate Spending
-    const spending = combinedData.map(d => d.Spending);
-    console.log('Spending Array:', spending);
+//     //Isolate Spending
+//     const spending = combinedData.map(d => d.Spending);
+//     console.log('Spending Array:', spending);
 
-    //Isolate Total Spending by Set
-    const totalSpendingSet = combinedData.map (d => d.totalSpendingBySet);
-    console.log('Total Spending by Set:', totalSpendingSet);
+//     //Isolate Total Spending by Set
+//     const totalSpendingSet = combinedData.map (d => d.totalSpendingBySet);
+//     console.log('Total Spending by Set:', totalSpendingSet);
 
-    // Define xScale7
-    const xScale7 = d3.scaleBand()
-        .domain(setNames)
-        .range([0, 600])
-        .padding(0.1);    
+//     // Define xScale7
+//     const xScale7 = d3.scaleBand()
+//         .domain(setNames)
+//         .range([0, 600])
+//         .padding(0.1);    
 
-    const yScale7 = d3.scaleLinear()
-        .domain([0, 1000000000]) 
-        .range([400, 0]);
+//     const yScale7 = d3.scaleLinear()
+//         .domain([0, 1000000000]) 
+//         .range([400, 0]);
 
-    const colorScale7 = d3.scaleOrdinal()
-        .domain(categoryNames)
-        .range(d3.schemeCategory10);
+//     const colorScale7 = d3.scaleOrdinal()
+//         .domain(categoryNames)
+//         .range(d3.schemeCategory10);
 
-    const xAxis7 = d3.axisBottom()
-        .scale(xScale7)
-        .tickSize(0);
+//     const xAxis7 = d3.axisBottom()
+//         .scale(xScale7)
+//         .tickSize(0);
 
-    const yAxis7 = d3.axisLeft()
-        .scale(yScale7)
-        .ticks(5)
-        .tickSizeInner(-600)
-        .tickSizeOuter(0);
+//     const yAxis7 = d3.axisLeft()
+//         .scale(yScale7)
+//         .ticks(5)
+//         .tickSizeInner(-600)
+//         .tickSizeOuter(0);
         
 
-    // Create SVG and Viewbox
-    const svg7 = d3.select("#svg-container-7")
-        .append("svg")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${550 + margin.top + margin.bottom}`)
-        .classed("svg-content-responsive", true)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+//     // Create SVG and Viewbox
+//     const svg7 = d3.select("#svg-container-7")
+//         .append("svg")
+//         .attr("preserveAspectRatio", "xMinYMin meet")
+//         .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${550 + margin.top + margin.bottom}`)
+//         .classed("svg-content-responsive", true)
+//         .append("g")
+//         .attr("transform", `translate(${margin.left},${margin.top})`);
     
-    // Append X and Y axes for SVG7
-    svg7.append("g")
-        .attr("class", "x-axis")
-        .attr("transform", `translate(${margin.left}, ${margin.top + 400})`) // Adjust as needed
-        .call(xAxis7)
-        .selectAll("text")
-        .attr("y", 10)
-        .attr("x", -5)
-        .attr("dy", ".35em")
-        .attr("transform", "rotate(-45)")
-        .style("text-anchor", "end");
+//     // Append X and Y axes for SVG7
+//     svg7.append("g")
+//         .attr("class", "x-axis")
+//         .attr("transform", `translate(${margin.left}, ${margin.top + 400})`) // Adjust as needed
+//         .call(xAxis7)
+//         .selectAll("text")
+//         .attr("y", 10)
+//         .attr("x", -5)
+//         .attr("dy", ".35em")
+//         .attr("transform", "rotate(-45)")
+//         .style("text-anchor", "end");
 
-    svg7.append("g")
-        .attr("class", "y-axis")
-        .attr("transform", `translate(${margin.left}, ${margin.top})`) // Adjust as needed
-        .call(yAxis7);
+//     svg7.append("g")
+//         .attr("class", "y-axis")
+//         .attr("transform", `translate(${margin.left}, ${margin.top})`) // Adjust as needed
+//         .call(yAxis7);
 
-    // Create layers
-    const layers = categoryNames.map(function(categoryName) {
-        return combinedData
-            .filter(d => d.Category === categoryName)
-            .map(function(d) {
-                return {
-                    'x': xScale7(d.Set),
-                    'y': d.Spending,
-                    'categoryName': categoryName,
-                    'set': d.Set
-                };
-            });
-    });
+//     // Create layers
+//     const layers = categoryNames.map(function(categoryName) {
+//         return combinedData
+//             .filter(d => d.Category === categoryName)
+//             .map(function(d) {
+//                 return {
+//                     'x': xScale7(d.Set),
+//                     'y': d.Spending,
+//                     'categoryName': categoryName,
+//                     'set': d.Set
+//                 };
+//             });
+//     });
 
-    // Transpose the layers to group by x values
-    const transposedLayers = d3.transpose(layers);
+//     // Transpose the layers to group by x values
+//     const transposedLayers = d3.transpose(layers);
 
-    // Log the original data before stacking
-    console.log('Original Data:', transposedLayers);
+//     // Log the original data before stacking
+//     console.log('Original Data:', transposedLayers);
 
-    // Use d3.stack() on the transposed layers
-    const stacked = d3.stack().keys(categoryNames)(transposedLayers);
-    console.log('Stacked:', stacked);
+//     // Use d3.stack() on the transposed layers
+//     const stacked = d3.stack().keys(categoryNames)(transposedLayers);
+//     console.log('Stacked:', stacked);
 
-    // Flatten the layers
-    const flatLayers = stacked.map((dataPoint, i) => {
-        const values = dataPoint.map((d, j) => {
-            if (isNaN(d[1])) {
-                console.log('Problematic Value:', transposedLayers[j][i]);
-            }
-            return {
-                x: transposedLayers[j][i].x,
-                y: d[1],  // Use the upper value of the stack
-                y0: d[0], // Use the lower value of the stack
-                categoryName: transposedLayers[j][i].categoryName,
-                set: transposedLayers[j][i].set
-            };
-        });
-        return values;
-    }).flat();
+//     // Flatten the layers
+//     const flatLayers = stacked.map((dataPoint, i) => {
+//         const values = dataPoint.map((d, j) => {
+//             if (isNaN(d[1])) {
+//                 console.log('Problematic Value:', transposedLayers[j][i]);
+//             }
+//             return {
+//                 x: transposedLayers[j][i].x,
+//                 y: d[1],  // Use the upper value of the stack
+//                 y0: d[0], // Use the lower value of the stack
+//                 categoryName: transposedLayers[j][i].categoryName,
+//                 set: transposedLayers[j][i].set
+//             };
+//         });
+//         return values;
+//     }).flat();
     
-    // Append bars to the SVG
-    svg7.selectAll(".bar")
-        .data(layers)
-        .enter().append("g")
-        .attr('class', 'layer');
+//     // Append bars to the SVG
+//     svg7.selectAll(".bar")
+//         .data(layers)
+//         .enter().append("g")
+//         .attr('class', 'layer');
 
-    svg7.selectAll("rect")
-        .data(d => d)
-        .enter().append("rect")
-        .attr("x", d => d.x + 50) 
-        .attr("y", d => yScale7(d.y + d.y0))
-        .attr("width", xScale7.rangeBand())
-        .attr('height', (d,i) => 650 - yScale7(d.y))
-        .attr("fill", (d,i) => colorScale7(d.categoryName))     
-        .on("mouseover", function (event, d) {
-        const set = d.data.Set;
-        handleMouseOverSVG7(event, d.data, set);
-        })
-        .on("mouseout", function () {
-        const setClass = d3.select(this).attr("class");
-        if (setClass) {
-            const set = setClass.split(" ")[1]; // Extract set from class if it exists
-            d3.select(`#tooltip-svg7-${set}`).transition().duration(500).style("opacity", 0);
-        }
-        });
+//     svg7.selectAll("rect")
+//         .data(d => d)
+//         .enter().append("rect")
+//         .attr("x", d => d.x + 50) 
+//         .attr("y", d => yScale7(d.y + d.y0))
+//         .attr("width", xScale7.rangeBand())
+//         .attr('height', (d,i) => 650 - yScale7(d.y))
+//         .attr("fill", (d,i) => colorScale7(d.categoryName))     
+//         .on("mouseover", function (event, d) {
+//         const set = d.data.Set;
+//         handleMouseOverSVG7(event, d.data, set);
+//         })
+//         .on("mouseout", function () {
+//         const setClass = d3.select(this).attr("class");
+//         if (setClass) {
+//             const set = setClass.split(" ")[1]; // Extract set from class if it exists
+//             d3.select(`#tooltip-svg7-${set}`).transition().duration(500).style("opacity", 0);
+//         }
+//         });
     
 
-    // Function to format number as currency
-    const formatCurrency = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    });
+//     // Function to format number as currency
+//     const formatCurrency = new Intl.NumberFormat('en-US', {
+//     style: 'currency',
+//     currency: 'USD',
+//     });
 
-    // Function to handle mouseover event for SVG7
-    const handleMouseOverSVG7 = (event, data, set) => {
-    console.log('Mouseover Event Triggered'); 
-    const tooltip7 = d3.select(`#tooltip-svg7-${set.replace(/\s+/g, '').toLowerCase()}`);
-    console.log('Tooltip Container:', tooltip7.node());
-    tooltip7.transition().duration(200).style("opacity", 0.9);
+//     // Function to handle mouseover event for SVG7
+//     const handleMouseOverSVG7 = (event, data, set) => {
+//     console.log('Mouseover Event Triggered'); 
+//     const tooltip7 = d3.select(`#tooltip-svg7-${set.replace(/\s+/g, '').toLowerCase()}`);
+//     console.log('Tooltip Container:', tooltip7.node());
+//     tooltip7.transition().duration(200).style("opacity", 0.9);
 
-    tooltip7.html(`
-        <p>Set: ${set}</p>
-        <p>Category: ${data.Category}</p>
-        <p>Spending: ${formatCurrency.format(data.Spending)}</p>
-    `)
-        .style("left", `${event.pageX}px`)
-        .style("top", `${event.pageY - 28}px`);
-        console.log('Mouse Event Coordinates:', event.pageX, event.pageY);
-    };
-    });
-});
+//     tooltip7.html(`
+//         <p>Set: ${set}</p>
+//         <p>Category: ${data.Category}</p>
+//         <p>Spending: ${formatCurrency.format(data.Spending)}</p>
+//     `)
+//         .style("left", `${event.pageX}px`)
+//         .style("top", `${event.pageY - 28}px`);
+//         console.log('Mouse Event Coordinates:', event.pageX, event.pageY);
+//     };
+//     });
+// });
+
+// SVG8 - Animated multiple of average household spending
+// Initialize ScrollMagic controller
+const controller = new ScrollMagic.Controller();
+
+// SVG 8
+const svg8 = d3.select("#svg-container-8")
+  .append("svg")
+  .attr("preserveAspectRatio", "xMinYMin meet")
+  .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${550 + margin.top + margin.bottom}`)
+  .classed("svg-content-responsive", true)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Define the total number of rectangles
+const totalRectangles = Math.floor(1000000000 / 87432);
+const rectangleSize = 5;
+const marginBetweenRectangles = 1;
+const rectanglesPerRow = 800 / (rectangleSize + marginBetweenRectangles);
+
+// Create the first rectangle
+const firstRectangle = svg8.append("rect")
+  .attr("width", rectangleSize)
+  .attr("height", rectangleSize)
+  .attr("fill", "cyan")
+  .attr("stroke", "rgba(191, 163, 63, 0.2)")
+  .attr("stroke-width", 1)
+  .attr("x", 0)
+  .attr("y", 0)
+  .style("opacity", 1) // Make the first rectangle visible initially
+ ;
+
+// Create the rest of the rectangles
+for (let i = 1; i < totalRectangles; i++) {
+  const row = Math.floor(i / rectanglesPerRow);
+  const col = i % rectanglesPerRow;
+  const x = col * (rectangleSize + marginBetweenRectangles);
+  const y = row * (rectangleSize + marginBetweenRectangles);
+
+  const rectangle = svg8.append("rect")
+    .attr("width", rectangleSize)
+    .attr("height", rectangleSize)
+    .attr("fill", "cyan")
+    .attr("stroke", "rgba(191, 163, 63, 0.2)")
+    .attr("stroke-width", 1)
+    .attr("x", x)
+    .attr("y", y)
+    .style("opacity", 0)
+};
+
+// Create the observer with a callback function
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Start the transition when the element is in view
+      startTransition();
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 }); // Adjust the threshold as needed
+
+// Observe the target element
+observer.observe(document.querySelector("#svg-container-8"));
+
+// Function to start the transition
+function startTransition() {
+  // Transition to make the rectangles visible
+  svg8.selectAll("rect")
+    .transition()
+    .delay((d, i) => i * 2) // Adjust the delay as needed
+    .style("opacity", 1);
+}
