@@ -809,3 +809,267 @@ function startTransition() {
     .delay((d, i) => i * 2) // Adjust the delay as needed
     .style("opacity", 1);
 }
+
+// SVG9a - Minimum Wage 
+const svg9a = d3.select("#svg-container-9a")
+  .append("svg")
+  .attr("preserveAspectRatio", "xMinYMin meet")
+  .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${100 + margin.top + margin.bottom}`)
+  .classed("svg-content-responsive", true)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Hourly Data
+const hourlyData = [{ category: "Hourly", wage: 7.25 }];
+
+// Color scale (using the same color scale as SVG9)
+const colorScale9a = d3.scaleOrdinal()
+  .domain(hourlyData.map(d => d.category))
+  .range(d3.schemeCategory10);
+
+// Circle
+const circle9a = svg9a.selectAll("circle")
+  .data(hourlyData)
+  .enter()
+  .append("circle")
+  .attr("cx", 50) 
+  .attr("cy", 50) 
+  .attr("r", 75)
+  .style("fill", d => colorScale9a(d.category))
+  .style("opacity", 0.7);
+
+// Text in Circle
+const text9a = svg9a.append("text")
+  .attr("x", 50)
+  .attr("y", 50)
+  .attr("dy", "0.35em")
+  .style("text-anchor", "middle")
+  .style("font-size", "12px") // Adjust the font size as needed
+  .style("font-weight", "bold")
+  .style("font-family", "sans-serif")
+  .style("fill", "white")
+  .text(`${hourlyData[0].category} Wage:\n$${hourlyData[0].wage.toFixed(2)}`);
+
+
+// SVG9 - Minimum Wage Bubbles
+const svg9 = d3.select("#svg-container-9")
+  .append("svg")
+  .attr("preserveAspectRatio", "xMinYMin meet")
+  .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${400 + margin.top + margin.bottom}`)
+  .classed("svg-content-responsive", true)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Wages Data for SVG9
+const wages = [
+  { category: "Hourly", wage: 7.25 },
+  { category: "Daily", wage: 58 },
+  { category: "Weekly", wage: 290 },
+  { category: "Monthly", wage: 1160 },
+  { category: "Yearly", wage: 14500 },
+];
+
+// Ordinal color scale for SVG9
+const colorScale = d3.scaleOrdinal()
+  .domain(wages.map(d => d.category))
+  .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "cyan", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
+
+// Bubble chart for SVG9
+const radiusScale = d3.scaleSqrt()
+  .domain([0, d3.max(wages, d => d.wage)])
+  .range([0, 200]);
+
+const simulation = d3.forceSimulation(wages)
+  .force("x", d3.forceX(400).strength(0.05)) // Center the bubbles
+  .force("y", d3.forceY(200).strength(0.1)) // Adjust the vertical position
+  .force("collide", d3.forceCollide(d => radiusScale(d.wage) + 2).iterations(2)); // Prevent overlapping
+
+const bubbles = svg9.selectAll("circle")
+  .data(wages)
+  .enter()
+  .append("circle")
+  .attr("r", d => radiusScale(d.wage))
+  .style("fill", d => colorScale(d.category))
+  .style("opacity", 0.7);
+
+// Find the data of the largest bubble for SVG9
+const maxData = wages.reduce((maxData, d) => d.wage > maxData.wage ? d : maxData, wages[0]);
+
+// Append text only to the largest bubble for SVG9
+const textLabel = svg9.append("text")
+  .attr("dy", "0.35em")
+  .style("text-anchor", "middle")
+  .style("font-size", "14px") // Adjust the font size as needed
+  .style("font-weight", "bold")
+  .style("font-family", "sans-serif")
+  .style("fill", "white")
+  .text(`${maxData.category} Wage:\n$${maxData.wage.toFixed(2)}`);
+
+simulation.nodes(wages)
+  .on("tick", () => {
+    bubbles
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+
+    // Update text position along with the largest bubble for SVG9
+    textLabel
+      .attr("x", maxData.x)
+      .attr("y", maxData.y);
+  });
+
+// Tooltip for SVG9
+const tooltip = d3.select("#svg-container-9").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
+bubbles.on("mouseover", function (event, d) {
+  tooltip.transition()
+    .duration(200)
+    .style("opacity", .9);
+  tooltip.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toFixed(2)}`)
+    .style("left", (event.pageX + 10) + "px")
+    .style("top", (event.pageY - 28) + "px");
+})
+  .on("mouseout", function (d) {
+    tooltip.transition()
+      .duration(500)
+      .style("opacity", 0);
+  });
+
+// SVG10 - Minimum Wage Bubbles
+const svg10 = d3.select("#svg-container-10")
+  .append("svg")
+  .attr("preserveAspectRatio", "xMinYMin meet")
+  .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${400 + margin.top + margin.bottom}`)
+  .classed("svg-content-responsive", true)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Wages Data for SVG10
+const wages10 = [
+  { category: "Yearly", wage: 14500 },
+  { category: "Lifetime", wage: 725000 },
+  { category: "Hourly", wage: 7.25 },
+  { category: "Daily", wage: 58 },
+  { category: "Weekly", wage: 290 },
+  { category: "Monthly", wage: 1160 },
+];
+
+// Bubble chart for SVG10
+const radiusScale10 = d3.scaleSqrt()
+  .domain([0, d3.max(wages10, d => d.wage)])
+  .range([0, 200]);
+
+const simulation10 = d3.forceSimulation(wages10)
+  .force("x", d3.forceX(400).strength(0.05)) // Center the bubbles
+  .force("y", d3.forceY(200).strength(0.1)) // Adjust the vertical position
+  .force("collide", d3.forceCollide(d => radiusScale10(d.wage) + 2).iterations(2)); // Prevent overlapping
+
+const bubbles10 = svg10.selectAll("circle")
+  .data(wages10)
+  .enter()
+  .append("circle")
+  .attr("r", d => radiusScale10(d.wage))
+  .style("fill", d => colorScale(d.category))
+  .style("opacity", 0.7);
+
+// Find the data of the largest bubble for SVG10
+const maxData10 = wages10.reduce((maxData, d) => d.wage > maxData.wage ? d : maxData, wages10[0]);
+
+// Append text only to the largest bubble for SVG10
+const textLabel10 = svg10.append("text")
+  .attr("dy", "0.35em")
+  .style("text-anchor", "middle")
+  .style("font-size", "14px") // Adjust the font size as needed
+  .style("font-weight", "bold")
+  .style("font-family", "sans-serif")
+  .style("fill", "white")
+  .text(`${maxData10.category} Wage:\n$${maxData10.wage.toFixed(2)}`);
+
+simulation10.nodes(wages10)
+  .on("tick", () => {
+    bubbles10
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+
+    // Update text position along with the largest bubble for SVG10
+    textLabel10
+      .attr("x", maxData10.x)
+      .attr("y", maxData10.y);
+  });
+
+// Tooltip for SVG10
+const tooltip10 = d3.select("#svg-container-10").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
+bubbles10.on("mouseover", function (event, d) {
+  tooltip10.transition()
+    .duration(200)
+    .style("opacity", .9);
+  tooltip10.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toFixed(2)}`)
+    .style("left", (event.pageX + 10) + "px")
+    .style("top", (event.pageY - 28) + "px");
+})
+  .on("mouseout", function (d) {
+    tooltip10.transition()
+      .duration(500)
+      .style("opacity", 0);
+  });
+
+// SVG11 - Lifetime Bubbles
+const svg11 = d3.select("#svg-container-11")
+  .append("svg")
+  .attr("preserveAspectRatio", "xMinYMin meet")
+  .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${800 + margin.top + margin.bottom}`)
+  .classed("svg-content-responsive", true)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Wages Data for SVG11
+const wages11 = Array.from({ length: 1379 }, () => ({ category: "Lifetime", wage: 725000 }));
+
+// Bubble chart for SVG11
+const radiusScale11 = d3.scaleSqrt()
+  .domain([0, d3.max(wages11, d => d.wage)])
+  .range([0, 8.5]);
+
+const simulation11 = d3.forceSimulation(wages11)
+  .force("x", d3.forceX(400).strength(0.2)) // Center the bubbles with higher strength
+  .force("y", d3.forceY(400).strength(0.2)) // Adjust the vertical position with higher strength
+  .force("collide", d3.forceCollide(d => radiusScale11(d.wage) + 2).iterations(4)) // Prevent overlapping with more iterations
+
+const bubbles11 = svg11.selectAll("circle")
+  .data(wages11)
+  .enter()
+  .append("circle")
+  .attr("r", d => radiusScale11(d.wage))
+  .style("fill", "cyan")
+  .style("opacity", 0.7)
+  .on("mouseover", function (event, d) {
+    tooltip11.transition()
+      .duration(200)
+      .style("opacity", .9);
+    tooltip11.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toFixed(2)}`)
+      .style("left", (event.pageX + 10) + "px")
+      .style("top", (event.pageY - 28) + "px");
+  })
+  .on("mouseout", function (d) {
+    tooltip11.transition()
+      .duration(500)
+      .style("opacity", 0);
+  });
+
+simulation11.nodes(wages11)
+  .on("tick", () => {
+    bubbles11
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+  });
+
+// Tooltip for SVG11
+const tooltip11 = d3.select("#svg-container-11").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
+
