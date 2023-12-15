@@ -58,6 +58,114 @@ svg3.append("rect")
 .attr("y", 0)  
 .attr("fill", "black");
 
+// // SVG 4
+// const svg4Container = d3.select("#svg-container-4");
+// const svg4 = svg4Container
+//   .append("svg")
+//   .attr("width", "100%")
+//   .attr("height", 1250000)
+//   .append("g")
+//   .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// // Create a 1,000,000,000 pixel rectangle
+// svg4.append("rect")
+//   .attr("width", 800)
+//   .attr("height", 1250000)
+//   .attr("x", 0)
+//   .attr("y", 0)
+//   .attr("fill", "black");
+
+// // Create a separate container for tooltips
+// const tooltipContainer = svg4Container
+//   .append("div")
+//   .attr("class", "tooltip-container")
+//   .style("opacity", 0);  // Set opacity to 0 to hide tooltips by default
+
+// // Load your dataset
+// d3.csv("data/BigNumbers_Clean.csv", d => d).then(data => {
+//   // Highlight specific pixels based on the dataset
+//   const highlights = svg4.selectAll("rect.highlight")
+//     .data(data)
+//     .enter()
+//     .append("rect")
+//     .attr("class", "highlight")
+//     .attr("width", 1)
+//     .attr("height", 1)
+//     .attr("x", d => d.Number % 800) // Remainder for x
+//     .attr("y", d => Math.floor(d.Number / 800)) // Division for y
+//     .attr("fill", "cyan");
+
+//   // Create invisible rectangles for trigger areas
+//   const triggerAreas = svg4.selectAll("g.trigger-area")
+//     .data(data)
+//     .enter()
+//     .append("g")
+//     .attr("class", "trigger-area")
+//     .on("mouseover", function (event, d) {
+//       handleMouseOver(event, d);
+//     })
+//     .on("mouseout", function () {
+//       // Removed the handleMouseOut function to prevent hiding tooltips
+//     });
+
+//   triggerAreas.append("rect")
+//     .attr("class", "trigger-area-rect")
+//     .attr("width", 10)
+//     .attr("height", 10)
+//     .attr("x", d => d.Number % 800 - 5) // Adjust x position
+//     .attr("y", d => Math.floor(d.Number / 800) - 5) // Adjust y position
+//     .attr("fill", "none")
+//     .attr("pointer-events", "all"); // Ensure the invisible rectangle captures events
+
+//   // Create dynamic tooltips in the margins
+//   const tooltipMargin = 10; // Adjust as needed
+
+//   data.forEach(d => {
+//     const xPosition = d.Number % 800;
+//     const yPosition = Math.floor(d.Number / 800);
+
+//     // Append foreignObject for the dynamic tooltip to the tooltipContainer
+//     const tooltipContainer = svg4Container
+//       .append("div")
+//       .attr("class", `tooltip-container tooltip-container-${d.Number}`)
+//       .style("opacity", 0)
+//       .style("position", "absolute")
+//       .style("left", `${svg4.node().getBoundingClientRect().left + xPosition + margin.left + tooltipMargin}px`)
+//       .style("top", `${svg4.node().getBoundingClientRect().top + yPosition + margin.top + tooltipMargin}px`);
+
+//     // Append xHTML content to the foreignObject
+//     const tooltipDiv = tooltipContainer.append("xhtml:div")
+//       .style("background", "white")
+//       .style("padding", "5px")
+//       .style("border", "1px solid black");
+
+//     // Add text to the tooltip
+//     tooltipDiv.append("p")
+//       .text(`Number: ${d.Number}`);
+
+//     tooltipDiv.append("p")
+//       .text(`Description: ${d.Description_short}`);
+
+//     // Calculate and set height based on content
+//     const tooltipHeight = tooltipDiv.node().getBoundingClientRect().height;
+//     tooltipContainer.style("height", `${tooltipHeight}px`);
+//   });
+
+//   // Function to handle mouseover event
+//   const handleMouseOver = (event, d) => {
+//     // Show tooltip immediately with no transition
+//     svg4Container.selectAll(".tooltip-container").style("opacity", 0);
+//     const tooltip = svg4Container.select(`.tooltip-container-${d.Number}`);
+//     tooltip.style("opacity", 1).style("z-index", 9999);
+
+//     // Update tooltip content based on data
+//     tooltip.html(`
+//       <p>Number: ${d.Number}</p>
+//       <p>Description: ${d.Description_short}</p>
+//     `);
+//   };
+// });
+
 // SVG4 1 billion points of light
 const svg4Container = d3.select("#svg-container-4");
 const svg4 = svg4Container
@@ -170,7 +278,6 @@ d3.csv("data/BigNumbers_Clean.csv", d => d).then(data => {
 const scene4 = new ScrollMagic.Scene({
   triggerElement: "#trigger-point",
   triggerHook: 0.5,
-  reverse: false,
 })
   .on("enter", (event) => {
     console.log('ScrollMagic Enter Event:', event, 'Scroll Direction:', event.scrollDirection); 
@@ -289,7 +396,6 @@ d3.csv("data/StLou_clean.csv", d => ({
   // Append X and Y axes
   svg5.append("g")
     .attr("class", "x-axis")
-    .attr("id", "x-axis-trigger-5")
     .attr("transform", `translate(50, ${400})`)
     .call(xAxis)
     .selectAll("text")
@@ -301,71 +407,51 @@ d3.csv("data/StLou_clean.csv", d => ({
 
   svg5.append("g")
     .attr("class", "y-axis")
-    .attr("transform", `translate(50, 0)`)
+    .attr("transform", `translate(50, 0)`) // Adjust the left margin for the y-axis
+
     .call(yAxis);
 
   // Function to format number as currency
-  const formatCurrency = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  // Function to handle mouseover event for SVG5
-  const handleMouseOverSVG5 = (event, d) => {
-    const tooltip5 = d3.select("#tooltip-svg5");
-    tooltip5.transition().duration(200).style("opacity", 0.9);
-
-    tooltip5.html(`
-      <p>Department: ${d.Department}</p>
-      <p>Spending: ${formatCurrency.format(d.Spending)}</p>
-    `)
-      .style("left", `${event.pageX}px`)
-      .style("top", `${event.pageY - 28}px`);
-  };
-
-  // Function to define the categorical color scale for SVG5
-  const colorScaleSVG5 = d3.scaleOrdinal()
-    .range(["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]);
-
-  // Append bars for SVG5 with categorical color
-  svg5.selectAll(".bar")
-    .data(data)
-    .enter().append("rect")
-    .attr("class", "bar")
-    .attr("x", d => 50 + xScale(d.Department))
-    .attr("width", xScale.bandwidth())
-    .attr("y", d => yScale(0)) // Initialize bars at the bottom
-    .attr("height", d => 0) // Initialize height to 0
-    .attr("fill", d => colorScaleSVG5(d.Department))
-    .on("mouseover", function (event, d) {
-      handleMouseOverSVG5(event, d);
-    });
-
-  // Set up the ScrollMagic controller for SVG5
-const controller5 = new ScrollMagic.Controller();
-
-// Create a scene for SVG5 enter event
-const scene5 = new ScrollMagic.Scene({
-  triggerElement: "#x-axis-trigger-5", 
-  triggerHook: 0.9,
-  reverse: false, 
-})
-  .on("enter", (event) => {
-    console.log('SVG5 ScrollMagic Enter Event:', event, 'Scroll Direction:', event.scrollDirection);
-    startSVG5Animation();
-  })
-  .addTo(controller5);
-
-// Function to start the SVG5 animation
-function startSVG5Animation() {
-  // Select all bars in SVG5 and start the animation
-  svg5.selectAll(".bar")
-    .transition()
-    .delay((d, i) => i * 1000) // Adjusted delay for a slower animation
-    .attr("y", d => yScale(d.Spending)) // Move bars to their actual position
-    .attr("height", d => 400 - yScale(d.Spending)); // Set the final height
-}
+const formatCurrency = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
 });
+
+// Function to handle mouseover event for SVG5
+const handleMouseOverSVG5 = (event, d) => {
+  const tooltip5 = d3.select("#tooltip-svg5");
+  tooltip5.transition().duration(200).style("opacity", 0.9);
+
+  tooltip5.html(`
+    <p>Department: ${d.Department}</p>
+    <p>Spending: ${formatCurrency.format(d.Spending)}</p>
+  `)
+    .style("left", `${event.pageX}px`)
+    .style("top", `${event.pageY - 28}px`);
+};
+
+// Function to define the categorical color scale for SVG5
+const colorScaleSVG5 = d3.scaleOrdinal()
+  .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
+
+
+// Append bars for SVG5 with categorical color
+svg5.selectAll(".bar")
+  .data(data)
+  .enter().append("rect")
+  .attr("class", "bar")
+  .attr("x", d => 50 + xScale(d.Department))
+  .attr("width", xScale.bandwidth())
+  .attr("y", d => yScale(d.Spending))
+  .attr("height", d => 400 - yScale(d.Spending))
+  .attr("fill", d => colorScaleSVG5(d.Department))
+  .on("mouseover", function (event, d) {
+    handleMouseOverSVG5(event, d);
+  })
+  .on("mouseout", function () {
+    d3.select("#tooltip-svg5").transition().duration(500).style("opacity", 0);
+  });
+});   
 
 // SVG 6
 const svg6 = d3.select("#svg-container-6")
@@ -406,7 +492,6 @@ d3.csv("data/BLS_2021_clean.csv", d => ({
   // Append X and Y axes for SVG6
   svg6.append("g")
     .attr("class", "x-axis")
-    .attr("id", "x-axis-trigger-6")
     .attr("transform", `translate(50, ${400})`)
     .call(xAxis6)
     .selectAll("text")
@@ -418,15 +503,15 @@ d3.csv("data/BLS_2021_clean.csv", d => ({
 
   svg6.append("g")
     .attr("class", "y-axis")
-    .attr("transform", `translate(50, 0)`)
+    .attr("transform", `translate(50, 0)`) // Adjust the left margin for the y-axis
     .call(yAxis6);
 
   // Function to format number as currency
-  const formatCurrency = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
+    const formatCurrency = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+    
   // Function to handle mouseover event for SVG6
   const handleMouseOverSVG6 = (event, d) => {
     const tooltip6 = d3.select("#tooltip-svg6");
@@ -440,50 +525,218 @@ d3.csv("data/BLS_2021_clean.csv", d => ({
       .style("top", `${event.pageY - 28}px`);
   };
 
-  // Function to define the categorical color scale for SVG6
-  const colorScaleSVG6 = d3.scaleOrdinal()
-    .range(["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]);
+// Function to define the categorical color scale for SVG6
+const colorScaleSVG6 = d3.scaleOrdinal()
+  .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
 
-  // Append bars for SVG6 with categorical color
-  svg6.selectAll(".bar")
-    .data(data)
-    .enter().append("rect")
-    .attr("class", "bar")
-    .attr("x", d => 50 + xScale6(d.Category))
-    .attr("width", xScale6.bandwidth())
-    .attr("y", d => yScale6(0)) // Initialize bars at the bottom
-    .attr("height", d => 0) // Initialize height to 0
-    .attr("fill", d => colorScaleSVG6(d.Category))
-    .on("mouseover", function (event, d) {
-      handleMouseOverSVG6(event, d);
-    });
 
-  // Set up the ScrollMagic controller for SVG6
-const controller6 = new ScrollMagic.Controller();
-
-// Create a scene for SVG6 enter event
-const scene6 = new ScrollMagic.Scene({
-  triggerElement: "#x-axis-trigger-6", 
-  triggerHook: 0.9,
-  reverse: false, 
+// Append bars for SVG6 with categorical color
+svg6.selectAll(".bar")
+.data(data)
+.enter().append("rect")
+.attr("class", "bar")
+.attr("x", d => 50 + xScale6(d.Category))
+.attr("width", xScale6.bandwidth())
+.attr("y", d => yScale6(d.Spending))
+.attr("height", d => 400 - yScale6(d.Spending))
+.attr("fill", d => colorScaleSVG6(d.Category))
+.on("mouseover", function (event, d) {
+  handleMouseOverSVG6(event, d);
 })
-  .on("enter", (event) => {
-    console.log('SVG6 ScrollMagic Enter Event:', event, 'Scroll Direction:', event.scrollDirection);
-    startSVG6Animation();
-  })
-  .addTo(controller6);
-
-// Function to start the SVG6 animation
-function startSVG6Animation() {
-  // Select all bars in SVG6 and start the animation
-  svg6.selectAll(".bar")
-    .transition()
-    .delay((d, i) => i * 1000) // Adjusted delay for a slower animation
-    .attr("y", d => yScale6(d.Spending)) // Move bars to their actual position
-    .attr("height", d => 400 - yScale6(d.Spending)); // Set the final height
-}
+.on("mouseout", function () {
+  d3.select("#tooltip-svg6").transition().duration(500).style("opacity", 0);
+});
 });
 
+// // SVG 7 - Combined Stacked Bar Chart
+// //Load and combine and order data:
+// d3.csv("data/BLS_2021_clean.csv", d => ({
+//     Category: d.Category,
+//     Spending: +d.Spending
+//   })).then(dataBLS => {
+//     dataBLS.sort((a, b) => b.Spending - a.Spending); // Sort in descending order
+    
+//     const totalSpendingBLS = d3.sum(dataBLS, d => d.Spending);
+
+//     dataBLS.forEach(d => d.totalSpendingBySet = totalSpendingBLS);
+    
+//     // Load the second dataset and sort by spending
+//     return d3.csv("data/StLou_clean.csv", d => ({
+//       Category: d.Department,
+//       Spending: +d.Spending
+//     })).then(dataStLou => {
+//       dataStLou.sort((a, b) => b.Spending - a.Spending); // Sort in descending order
+  
+//       const totalSpendingStLou = d3.sum(dataStLou, d => d.Spending);
+
+//       dataStLou.forEach(d => d.totalSpendingBySet = totalSpendingStLou);
+
+//     // Combine datasets and add a 'Set' property
+//     const combinedData = [
+//         ...dataBLS.map(d => ({ Category: d.Category, Spending: d.Spending, totalSpendingBySet: d.totalSpendingBySet, Set: 'Yearly household expenses' })),
+//         ...dataStLou.map(d => ({ Category: d.Category, Spending: d.Spending, totalSpendingBySet: d.totalSpendingBySet, Set: 'Yearly municipal expenses' }))
+//       ];
+//     console.log(combinedData);
+      
+    
+//     //Isolate Set names 
+//     const setNames = combinedData.map(d => d.Set);
+
+//     //Isolate Category names 
+//     const categoryNames = combinedData.map(d =>d.Category);
+//     console.log('Category Names array:', categoryNames);
+
+//     //Isolate Spending
+//     const spending = combinedData.map(d => d.Spending);
+//     console.log('Spending Array:', spending);
+
+//     //Isolate Total Spending by Set
+//     const totalSpendingSet = combinedData.map (d => d.totalSpendingBySet);
+//     console.log('Total Spending by Set:', totalSpendingSet);
+
+//     // Define xScale7
+//     const xScale7 = d3.scaleBand()
+//         .domain(setNames)
+//         .range([0, 600])
+//         .padding(0.1);    
+
+//     const yScale7 = d3.scaleLinear()
+//         .domain([0, 1000000000]) 
+//         .range([400, 0]);
+
+//     const colorScale7 = d3.scaleOrdinal()
+//         .domain(categoryNames)
+//         .range(d3.schemeCategory10);
+
+//     const xAxis7 = d3.axisBottom()
+//         .scale(xScale7)
+//         .tickSize(0);
+
+//     const yAxis7 = d3.axisLeft()
+//         .scale(yScale7)
+//         .ticks(5)
+//         .tickSizeInner(-600)
+//         .tickSizeOuter(0);
+        
+
+//     // Create SVG and Viewbox
+//     const svg7 = d3.select("#svg-container-7")
+//         .append("svg")
+//         .attr("preserveAspectRatio", "xMinYMin meet")
+//         .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${550 + margin.top + margin.bottom}`)
+//         .classed("svg-content-responsive", true)
+//         .append("g")
+//         .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+//     // Append X and Y axes for SVG7
+//     svg7.append("g")
+//         .attr("class", "x-axis")
+//         .attr("transform", `translate(${margin.left}, ${margin.top + 400})`) // Adjust as needed
+//         .call(xAxis7)
+//         .selectAll("text")
+//         .attr("y", 10)
+//         .attr("x", -5)
+//         .attr("dy", ".35em")
+//         .attr("transform", "rotate(-45)")
+//         .style("text-anchor", "end");
+
+//     svg7.append("g")
+//         .attr("class", "y-axis")
+//         .attr("transform", `translate(${margin.left}, ${margin.top})`) // Adjust as needed
+//         .call(yAxis7);
+
+//     // Create layers
+//     const layers = categoryNames.map(function(categoryName) {
+//         return combinedData
+//             .filter(d => d.Category === categoryName)
+//             .map(function(d) {
+//                 return {
+//                     'x': xScale7(d.Set),
+//                     'y': d.Spending,
+//                     'categoryName': categoryName,
+//                     'set': d.Set
+//                 };
+//             });
+//     });
+
+//     // Transpose the layers to group by x values
+//     const transposedLayers = d3.transpose(layers);
+
+//     // Log the original data before stacking
+//     console.log('Original Data:', transposedLayers);
+
+//     // Use d3.stack() on the transposed layers
+//     const stacked = d3.stack().keys(categoryNames)(transposedLayers);
+//     console.log('Stacked:', stacked);
+
+//     // Flatten the layers
+//     const flatLayers = stacked.map((dataPoint, i) => {
+//         const values = dataPoint.map((d, j) => {
+//             if (isNaN(d[1])) {
+//                 console.log('Problematic Value:', transposedLayers[j][i]);
+//             }
+//             return {
+//                 x: transposedLayers[j][i].x,
+//                 y: d[1],  // Use the upper value of the stack
+//                 y0: d[0], // Use the lower value of the stack
+//                 categoryName: transposedLayers[j][i].categoryName,
+//                 set: transposedLayers[j][i].set
+//             };
+//         });
+//         return values;
+//     }).flat();
+    
+//     // Append bars to the SVG
+//     svg7.selectAll(".bar")
+//         .data(layers)
+//         .enter().append("g")
+//         .attr('class', 'layer');
+
+//     svg7.selectAll("rect")
+//         .data(d => d)
+//         .enter().append("rect")
+//         .attr("x", d => d.x + 50) 
+//         .attr("y", d => yScale7(d.y + d.y0))
+//         .attr("width", xScale7.rangeBand())
+//         .attr('height', (d,i) => 650 - yScale7(d.y))
+//         .attr("fill", (d,i) => colorScale7(d.categoryName))     
+//         .on("mouseover", function (event, d) {
+//         const set = d.data.Set;
+//         handleMouseOverSVG7(event, d.data, set);
+//         })
+//         .on("mouseout", function () {
+//         const setClass = d3.select(this).attr("class");
+//         if (setClass) {
+//             const set = setClass.split(" ")[1]; // Extract set from class if it exists
+//             d3.select(`#tooltip-svg7-${set}`).transition().duration(500).style("opacity", 0);
+//         }
+//         });
+    
+
+//     // Function to format number as currency
+//     const formatCurrency = new Intl.NumberFormat('en-US', {
+//     style: 'currency',
+//     currency: 'USD',
+//     });
+
+//     // Function to handle mouseover event for SVG7
+//     const handleMouseOverSVG7 = (event, data, set) => {
+//     console.log('Mouseover Event Triggered'); 
+//     const tooltip7 = d3.select(`#tooltip-svg7-${set.replace(/\s+/g, '').toLowerCase()}`);
+//     console.log('Tooltip Container:', tooltip7.node());
+//     tooltip7.transition().duration(200).style("opacity", 0.9);
+
+//     tooltip7.html(`
+//         <p>Set: ${set}</p>
+//         <p>Category: ${data.Category}</p>
+//         <p>Spending: ${formatCurrency.format(data.Spending)}</p>
+//     `)
+//         .style("left", `${event.pageX}px`)
+//         .style("top", `${event.pageY - 28}px`);
+//         console.log('Mouse Event Coordinates:', event.pageX, event.pageY);
+//     };
+//     });
+// });
 
 // SVG8 - Animated multiple of average household spending
 // Initialize ScrollMagic controller
@@ -557,9 +810,8 @@ function startTransition() {
     .style("opacity", 1);
 }
 
-// SVG9a - Minimum Wage
-const svg9a = d3
-  .select("#svg-container-9a")
+// SVG9a - Minimum Wage 
+const svg9a = d3.select("#svg-container-9a")
   .append("svg")
   .attr("preserveAspectRatio", "xMinYMin meet")
   .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${100 + margin.top + margin.bottom}`)
@@ -571,23 +823,23 @@ const svg9a = d3
 const hourlyData = [{ category: "Hourly", wage: 7.25 }];
 
 // Color scale (using the same color scale as SVG9)
-const colorScale9a = d3.scaleOrdinal().domain(hourlyData.map((d) => d.category)).range(d3.schemeCategory10);
+const colorScale9a = d3.scaleOrdinal()
+  .domain(hourlyData.map(d => d.category))
+  .range(d3.schemeCategory10);
 
 // Circle
-const circle9a = svg9a
-  .selectAll("circle")
+const circle9a = svg9a.selectAll("circle")
   .data(hourlyData)
   .enter()
   .append("circle")
-  .attr("cx", 50)
-  .attr("cy", 50)
+  .attr("cx", 50) 
+  .attr("cy", 50) 
   .attr("r", 75)
-  .style("fill", (d) => colorScale9a(d.category))
-  .style("opacity", 0);
+  .style("fill", d => colorScale9a(d.category))
+  .style("opacity", 0.7);
 
 // Text in Circle
-const text9a = svg9a
-  .append("text")
+const text9a = svg9a.append("text")
   .attr("x", 50)
   .attr("y", 50)
   .attr("dy", "0.35em")
@@ -596,31 +848,7 @@ const text9a = svg9a
   .style("font-weight", "bold")
   .style("font-family", "sans-serif")
   .style("fill", "white")
-  .text(`${hourlyData[0].category} Wage:\n$${hourlyData[0].wage.toFixed(2)}`)
-  .style("opacity", 0);
-
-// Unique names for ScrollMagic controller and scene
-const controller9a = new ScrollMagic.Controller();
-
-// Scene enter event using the unique controller and timeline
-const scene9a = new ScrollMagic.Scene({
-  triggerElement: "#svg-container-9a",
-  triggerHook: 0.5,
-  reverse: false, 
-})
-  .on("enter", () => {
-    // GSAP timeline for SVG9a animation
-    const timeline9a = gsap.timeline();
-
-    // Add animations to the timeline
-    timeline9a
-      .to(circle9a.node(), { duration: 1, opacity: 0.7 }) // Transition for the circle
-      .to(text9a.node(), { duration: 1, opacity: 1 }, "-=0.5"); // Transition for the text in the circle
-
-    // Add the timeline to the scene
-    scene9a.setTween(timeline9a);
-  })
-  .addTo(controller9a);
+  .text(`${hourlyData[0].category} Wage:\n$${hourlyData[0].wage.toFixed(2)}`);
 
 
 // SVG9 - Minimum Wage Bubbles
@@ -628,97 +856,85 @@ const svg9 = d3.select("#svg-container-9")
   .append("svg")
   .attr("preserveAspectRatio", "xMinYMin meet")
   .attr("viewBox", `0 0 ${800 + margin.left + margin.right} ${400 + margin.top + margin.bottom}`)
-  .classed("svg-content-responsive", true);
+  .classed("svg-content-responsive", true)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// Unique names for ScrollMagic controller and scene
-const controller9 = new ScrollMagic.Controller();
+// Wages Data for SVG9
+const wages = [
+  { category: "Hourly", wage: 7.25 },
+  { category: "Daily", wage: 58 },
+  { category: "Weekly", wage: 290 },
+  { category: "Monthly", wage: 1160 },
+  { category: "Yearly", wage: 14500 },
+];
 
-// Scene enter event using the unique controller and timeline for SVG9
-const scene9 = new ScrollMagic.Scene({
-  triggerElement: "#svg-container-9",
-  triggerHook: 0.5,
-  reverse: false,
+// Ordinal color scale for SVG9
+const colorScale = d3.scaleOrdinal()
+  .domain(wages.map(d => d.category))
+  .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "cyan", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
+
+// Bubble chart for SVG9
+const radiusScale = d3.scaleSqrt()
+  .domain([0, d3.max(wages, d => d.wage)])
+  .range([0, 200]);
+
+const simulation = d3.forceSimulation(wages)
+  .force("x", d3.forceX(400).strength(0.05)) // Center the bubbles
+  .force("y", d3.forceY(200).strength(0.1)) // Adjust the vertical position
+  .force("collide", d3.forceCollide(d => radiusScale(d.wage) + 2).iterations(2)); // Prevent overlapping
+
+const bubbles = svg9.selectAll("circle")
+  .data(wages)
+  .enter()
+  .append("circle")
+  .attr("r", d => radiusScale(d.wage))
+  .style("fill", d => colorScale(d.category))
+  .style("opacity", 0.7);
+
+// Find the data of the largest bubble for SVG9
+const maxData = wages.reduce((maxData, d) => d.wage > maxData.wage ? d : maxData, wages[0]);
+
+// Append text only to the largest bubble for SVG9
+const textLabel = svg9.append("text")
+  .attr("dy", "0.35em")
+  .style("text-anchor", "middle")
+  .style("font-size", "14px") // Adjust the font size as needed
+  .style("font-weight", "bold")
+  .style("font-family", "sans-serif")
+  .style("fill", "white")
+  .text(`${maxData.category} Wage:\n$${maxData.wage.toFixed(2)}`);
+
+simulation.nodes(wages)
+  .on("tick", () => {
+    bubbles
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+
+    // Update text position along with the largest bubble for SVG9
+    textLabel
+      .attr("x", maxData.x)
+      .attr("y", maxData.y);
+  });
+
+// Tooltip for SVG9
+const tooltip = d3.select("#svg-container-9").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
+bubbles.on("mouseover", function (event, d) {
+  tooltip.transition()
+    .duration(200)
+    .style("opacity", .9);
+  tooltip.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toFixed(2)}`)
+    .style("left", (event.pageX + 10) + "px")
+    .style("top", (event.pageY - 28) + "px");
 })
-  .on("enter", () => {
-    // Wages Data for SVG9
-    const wages = [
-      { category: "Hourly", wage: 7.25 },
-      { category: "Daily", wage: 58 },
-      { category: "Weekly", wage: 290 },
-      { category: "Monthly", wage: 1160 },
-      { category: "Yearly", wage: 14500 },
-    ];
-
-    // Ordinal color scale for SVG9
-    const colorScale = d3.scaleOrdinal()
-      .domain(wages.map(d => d.category))
-      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "cyan", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
-
-    // Bubble chart for SVG9
-    const radiusScale = d3.scaleSqrt()
-      .domain([0, d3.max(wages, d => d.wage)])
-      .range([0, 200]);
-
-    const simulation = d3.forceSimulation(wages)
-      .force("x", d3.forceX(400).strength(0.05)) // Center the bubbles
-      .force("y", d3.forceY(200).strength(0.1)) // Adjust the vertical position
-      .force("collide", d3.forceCollide(d => radiusScale(d.wage) + 2).iterations(2)); // Prevent overlapping
-
-    const bubbles = svg9.append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`)
-      .selectAll("circle")
-      .data(wages)
-      .enter()
-      .append("circle")
-      .attr("r", d => radiusScale(d.wage))
-      .style("fill", d => colorScale(d.category))
-      .style("opacity", 0.7);
-
-    // Find the data of the largest bubble for SVG9
-    const maxData = wages.reduce((maxData, d) => d.wage > maxData.wage ? d : maxData, wages[0]);
-
-    // Append text only to the largest bubble for SVG9
-    const textLabel = svg9.append("text")
-      .attr("dy", "0.35em")
-      .style("text-anchor", "middle")
-      .style("font-size", "14px") // Adjust the font size as needed
-      .style("font-weight", "bold")
-      .style("font-family", "sans-serif")
-      .style("fill", "white")
-      .text(`${maxData.category} Wage:\n$${maxData.wage.toFixed(2)}`);
-
-    simulation.nodes(wages)
-      .on("tick", () => {
-        bubbles
-          .attr("cx", d => d.x)
-          .attr("cy", d => d.y);
-
-        // Update text position along with the largest bubble for SVG9
-        textLabel
-          .attr("x", maxData.x)
-          .attr("y", maxData.y);
-      });
-
-    // Tooltip for SVG9
-    const tooltip = d3.select("#svg-container-9").append("div")
-      .attr("class", "tooltip")
+  .on("mouseout", function (d) {
+    tooltip.transition()
+      .duration(500)
       .style("opacity", 0);
-
-    bubbles.on("mouseover", function (event, d) {
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", .9);
-      tooltip.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toFixed(2)}`)
-        .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY - 28) + "px");
-    })
-      .on("mouseout", function (d) {
-        tooltip.transition()
-          .duration(500)
-          .style("opacity", 0);
-      });
-  })
-  .addTo(controller9);
+  });
 
 // SVG10 - Minimum Wage Bubbles
 const svg10 = d3.select("#svg-container-10")
