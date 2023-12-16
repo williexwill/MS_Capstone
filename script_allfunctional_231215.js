@@ -64,7 +64,7 @@ const svg4Container = d3.select("#svg-container-4");
 const svg4 = svg4Container
   .append("svg")
   .attr("width", "100%")
-  .attr("height", 1250075)
+  .attr("height", 1250000)
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -222,61 +222,6 @@ function loadDataAndProcess() {
 // Call the main function
 loadDataAndProcess();
 
-// Function to add "skip to bottom" button and handle its behavior
-function addSkipToBottomButton() {
-  // Append the button to the body
-  const skipToBottomButton = d3.select("body")
-    .append("button")
-    .attr("id", "skipToBottomButton")
-    .text("Skip to Bottom")
-    .style("position", "fixed")
-    .style("bottom", "10px")
-    .style("right", "10px")
-    .style("display", "none"); // Initially hide the button
-
-  // Unique name for ScrollMagic controller for the button
-  const controllerButton = new ScrollMagic.Controller();
-
-  // Scene enter event using the unique controller for the button
-  const sceneButton = new ScrollMagic.Scene({
-    triggerElement: "#svg-container-4", // Adjust this selector based on your SVG container
-    triggerHook: 0.8, // Adjust the trigger hook as needed
-  }).on("enter", ({ scrollDirection }) => {
-    console.log('ScrollMagic Enter Event for Button:', scrollDirection);
-    // Show the button when the SVG container is in view
-    skipToBottomButton.style("display", "block");
-  }).on("leave", ({ scrollDirection }) => {
-    console.log('ScrollMagic Leave Event for Button:', scrollDirection);
-    // Hide the button when the SVG container is out of view
-    skipToBottomButton.style("display", "none");
-  }).addTo(controllerButton);
-
-  // Scene for hiding the button when reaching the trigger-hide-button
-  const sceneHideButton = new ScrollMagic.Scene({
-    triggerElement: "#trigger-hide-button", // Adjust this selector based on your trigger element
-    triggerHook: 1, // Adjust the trigger hook as needed
-  }).on("enter", () => {
-    // Hide the button when reaching the trigger-hide-button
-    skipToBottomButton.style("display", "none");
-  }).on("leave", () => {
-    // Show the button when leaving the trigger-hide-button
-    skipToBottomButton.style("display", "block");
-  }).addTo(controllerButton);
-
-  // Add click event to the "skip to bottom" button
-  skipToBottomButton.on("click", () => {
-    // Scroll to the top of the "trigger-hide-button" element smoothly
-    const scrollHeight = document.getElementById("trigger-hide-button").offsetTop - 150;
-
-    window.scrollTo({
-      top: scrollHeight,
-      behavior: "smooth",
-    });
-  });
-}
-
-// Call the function to add the button and handle its behavior
-addSkipToBottomButton();
 
 // SVG 5
 const svg5 = d3.select("#svg-container-5")
