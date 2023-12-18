@@ -64,15 +64,16 @@ ul {font-family: "Amiri";
     border-radius: 2px;
   }
  
-  .highlight {
+.highlight {
     opacity: 1;
   }
 
-  .tooltip {
+
+
+.tooltip {
     opacity: 0;
     transition: opacity 0.5s ease; /* added 12/23 when playing with SVG4  */
     position: absolute;
-    z-index: 9999;
     background: white;
     padding: 5px;
     border: 1px solid black;
@@ -120,4 +121,8 @@ ul {font-family: "Amiri";
   border: 1px solid black;
   left: 0;
   top: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #333333; /* Color of the thumb */
 }
