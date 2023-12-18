@@ -240,7 +240,7 @@ function addSkipToBottomButton() {
   // Scene enter event using the unique controller for the button
   const sceneButton = new ScrollMagic.Scene({
     triggerElement: "#svg-container-4", // Adjust this selector based on your SVG container
-    triggerHook: 0.8, // Adjust the trigger hook as needed
+    triggerHook: 1, // Adjust the trigger hook to 1
   }).on("enter", ({ scrollDirection }) => {
     console.log('ScrollMagic Enter Event for Button:', scrollDirection);
     // Show the button when the SVG container is in view
@@ -277,6 +277,112 @@ function addSkipToBottomButton() {
 
 // Call the function to add the button and handle its behavior
 addSkipToBottomButton();
+
+// Variable to keep track of the last highlighted index
+let lastHighlightIndex = -1;
+
+// Function to find the next highlight beyond the current view
+function findNextHighlight(currentWindowPosition) {
+  const highlights = d3.selectAll("rect.highlight").nodes();
+  const windowHeight = window.innerHeight;
+
+  // Start searching for highlights from the last highlighted index + 1
+  for (let i = lastHighlightIndex + 1; i < highlights.length; i++) {
+    const highlight = highlights[i];
+    const highlightPosition = highlight.getBoundingClientRect().top + window.scrollY;
+
+    console.log('Highlight index:', i);
+    console.log('Highlight top:', highlightPosition);
+
+    const marginOfError = 5; // Adjust as needed
+
+    if (highlightPosition > currentWindowPosition - marginOfError && highlightPosition < currentWindowPosition + windowHeight + marginOfError) {
+      continue; // Skip highlights within the current view
+    }
+
+    // Update the last highlighted index
+    lastHighlightIndex = i;
+
+    return {
+      data: highlight.__data__,
+      position: highlightPosition,
+    }; // Return the data associated with the next highlight
+  }
+
+  return null; // Return null if no next highlight is found
+}
+
+// Function to add "Next" button and handle its behavior
+function addNextButton() {
+  // Append the button to the body
+  const nextButton = d3.select("body")
+    .append("button")
+    .attr("id", "nextButton")
+    .text("Next")
+    .style("position", "fixed")
+    .style("bottom", "50px")
+    .style("right", "10px")
+    .style("display", "none"); // Initially hide the button
+
+  // Unique name for ScrollMagic controller for the button
+  const controllerButton = new ScrollMagic.Controller();
+
+  // Scene enter event using the unique controller for the button
+  const sceneButton = new ScrollMagic.Scene({
+    triggerElement: "#svg-container-4", // Adjust this selector based on your SVG container
+    triggerHook: 1, // Adjust the trigger hook to 1
+  }).on("enter", ({ scrollDirection }) => {
+    console.log('ScrollMagic Enter Event for Next Button:', scrollDirection);
+    // Show the button when the SVG container is in view
+    nextButton.style("display", "block");
+  }).on("leave", ({ scrollDirection }) => {
+    console.log('ScrollMagic Leave Event for Next Button:', scrollDirection);
+    // Hide the button when the SVG container is out of view
+    nextButton.style("display", "none");
+  }).addTo(controllerButton);
+
+  // Scene for hiding the button when reaching the trigger-hide-button
+  const sceneHideButton = new ScrollMagic.Scene({
+    triggerElement: "#trigger-hide-button", // Adjust this selector based on your trigger element
+    triggerHook: 1, // Adjust the trigger hook as needed
+  }).on("enter", () => {
+    // Hide the button when reaching the trigger-hide-button
+    nextButton.style("display", "none");
+  }).on("leave", () => {
+    // Show the button when leaving the trigger-hide-button
+    nextButton.style("display", "block");
+  }).addTo(controllerButton);
+
+  // Add click event to the "Next" button
+  nextButton.on("click", () => {
+    // Recalculate the current window position on each click
+    const currentWindowPosition = window.scrollY;
+    console.log('Current window position:', currentWindowPosition);
+
+    // Find the next highlight beyond the current view using the updated currentWindowPosition
+    const nextHighlight = findNextHighlight(currentWindowPosition);
+    console.log('Next highlight found:', nextHighlight);
+
+    if (nextHighlight) {
+      // Scroll to the position of the next highlight, centering it in the window
+      const scrollPosition = nextHighlight.position - window.innerHeight / 2;
+      console.log('Scrolling to new position:', scrollPosition);
+
+      // Use native window scroll method for smooth scrolling
+      window.scroll({
+        top: scrollPosition,
+        behavior: "smooth",
+      });
+    } else {
+      console.log('No next highlight found.');
+    }
+  });
+}
+
+// Call the function to add the "Next" button and handle its behavior
+addNextButton();
+
+
 
 // SVG 5
 const svg5 = d3.select("#svg-container-5")
