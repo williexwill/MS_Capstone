@@ -128,7 +128,7 @@ function loadDataAndProcess() {
           .style("border", "1px solid black");
 
         tooltipContent.append("p")
-          .text(`${d.Number.toLocaleString()}`);
+          .text(`${d.Number_format}`);
 
         tooltipContent.append("p")
           .text(`${d.Description_short}`);
@@ -503,7 +503,7 @@ function startSVG5Animation() {
   // Select all bars in SVG5 and start the animation
   svg5.selectAll(".bar")
     .transition()
-    .delay((d, i) => i * 1000) // Adjusted delay for a slower animation
+    .delay((d, i) => i * 300) // Adjusted delay for a slower animation
     .attr("y", d => yScale(d.Spending)) // Move bars to their actual position
     .attr("height", d => 400 - yScale(d.Spending)); // Set the final height
 }
@@ -620,7 +620,7 @@ function startSVG6Animation() {
   // Select all bars in SVG6 and start the animation
   svg6.selectAll(".bar")
     .transition()
-    .delay((d, i) => i * 1000) // Adjusted delay for a slower animation
+    .delay((d, i) => i * 300) // Adjusted delay for a slower animation
     .attr("y", d => yScale6(d.Spending)) // Move bars to their actual position
     .attr("height", d => 400 - yScale6(d.Spending)); // Set the final height
 }
@@ -666,7 +666,7 @@ const firstLabel = svg8.append("text")
   .style("font-weight", "bold")
   .style("fill", "black")
   .style("opacity", 1) // Make the first label visible initially
-  .text("First Label Placeholder");
+  .text("The average American household spent $87,432 in 2021");
  
 // Create the rest of the rectangles
 for (let i = 1; i < totalRectangles; i++) {
@@ -691,13 +691,13 @@ const lastRectangleX = (totalRectangles % rectanglesPerRow) * (rectangleSize + m
 
 // Create the last label (below the last rectangle)
 const lastLabel = svg8.append("text")
-  .attr("x", lastRectangleX)
+  .attr("x", 800 + margin.left + margin.right - lastRectangleX)
   .attr("y", totalRectangles / rectanglesPerRow * (rectangleSize + marginBetweenRectangles) + 20) // Adjust the y-coordinate as needed
   .style("font-size", "12px") // Adjust the font size as needed
   .style("font-weight", "bold")
   .style("fill", "black")
   .style("opacity", 0) // Make the last label initially invisible
-  .text("Last Label Placeholder");
+  .text("A single billionaire could cover the costs of 11,437 American families for a year.");
 
 // Create the observer with a callback function
 const observer = new IntersectionObserver((entries, observer) => {
