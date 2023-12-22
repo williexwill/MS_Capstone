@@ -60,10 +60,15 @@ svg3.append("rect")
 .attr("fill", "black");
 
 // SVG4 1 billion points of light
+// Constants
+const svgWidth = 800;
+const svgHeight = 1250000;
+const tooltipMargin = 3;
+
 const svg4Container = d3.select("#svg-container-4");
 const svg4 = svg4Container
   .append("svg")
-  .attr("width", "100%")
+  .attr("width", 1000)
   .attr("height", 1250075)
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -75,13 +80,22 @@ svg4.append("rect")
   .attr("y", 0)
   .attr("fill", "black");
 
+// Append the axis to the right side of the SVG
+const axisScale = d3.scaleLinear()
+  .domain([0, 1000000000])
+  .range([0, svgHeight]);
+
+const axis = d3.axisRight(axisScale)
+  .tickValues(d3.range(0, 1000000000, 500000))
+  .tickFormat(d3.format(",.0f"));
+
+svg4.append("g")
+  .attr("class", "axis")
+  .attr("transform", `translate(${svgWidth}, 0)`)
+  .call(axis);
+
 // Use a single tooltip container for all tooltips
 const tooltipContainer = d3.select("#tooltip-svg4");
-
-// Constants
-const svgWidth = 800;
-const svgHeight = 1250000;
-const tooltipMargin = 3;
 
 // Function to load and process data
 function loadDataAndProcess() {
@@ -305,10 +319,9 @@ function findNextHighlight(currentWindowPosition) {
     console.log('Highlight index:', i);
     console.log('Highlight top:', highlightPosition);
 
-    const marginOfError = 5; // Adjust as needed
-
-    if (highlightPosition > currentWindowPosition - marginOfError && highlightPosition < currentWindowPosition + windowHeight + marginOfError) {
-      continue; // Skip highlights within the current view
+    // Skip highlights that are above or at the current view
+    if (highlightPosition <= currentWindowPosition) {
+      continue;
     }
 
     // Update the last highlighted index
@@ -368,7 +381,6 @@ function addNextButton() {
   nextButton.on("click", () => {
     // Recalculate the current window position on each click
     const currentWindowPosition = window.scrollY;
-    console.log('Current window position:', currentWindowPosition);
 
     // Find the next highlight beyond the current view using the updated currentWindowPosition
     const nextHighlight = findNextHighlight(currentWindowPosition);
@@ -393,7 +405,59 @@ function addNextButton() {
 // Call the function to add the "Next" button and handle its behavior
 addNextButton();
 
+// Function to add "Back to Top" button and handle its behavior
+function addBackToTopButton() {
+  // Append the button to the body
+  const backToTopButton = d3.select("body")
+    .append("button")
+    .attr("id", "backToTopButton")
+    .text("Back to Top")
+    .style("position", "fixed")
+    .style("bottom", "90px") // Adjust the position as needed
+    .style("right", "10px")
+    .style("display", "none"); // Initially hide the button
 
+  // Unique name for ScrollMagic controller for the button
+  const controllerButton = new ScrollMagic.Controller();
+
+  // Scene enter event using the unique controller for the button
+  const sceneButton = new ScrollMagic.Scene({
+    triggerElement: "#svg-container-4", // Adjust this selector based on your SVG container
+    triggerHook: 1, // Adjust the trigger hook to 1
+  }).on("enter", ({ scrollDirection }) => {
+    console.log('ScrollMagic Enter Event for Back to Top Button:', scrollDirection);
+    // Show the button when the SVG container is in view
+    backToTopButton.style("display", "block");
+  }).on("leave", ({ scrollDirection }) => {
+    console.log('ScrollMagic Leave Event for Back to Top Button:', scrollDirection);
+    // Hide the button when the SVG container is out of view
+    backToTopButton.style("display", "none");
+  }).addTo(controllerButton);
+
+  // Scene for hiding the button when reaching the trigger-hide-button
+  const sceneHideButton = new ScrollMagic.Scene({
+    triggerElement: "#trigger-hide-button", // Adjust this selector based on your trigger element
+    triggerHook: 1, // Adjust the trigger hook as needed
+  }).on("enter", () => {
+    // Hide the button when reaching the trigger-hide-button
+    backToTopButton.style("display", "none");
+  }).on("leave", () => {
+    // Show the button when leaving the trigger-hide-button
+    backToTopButton.style("display", "block");
+  }).addTo(controllerButton);
+
+  // Add click event to the "Back to Top" button
+  backToTopButton.on("click", () => {
+    // Scroll to the top of the SVG4, adjusting as needed
+    window.scrollTo({
+      top: document.getElementById("svg-container-4").offsetTop - window.innerHeight / 3,
+      behavior: "smooth",
+    });
+  });
+}
+
+// Call the function to add the "Back to Top" button and handle its behavior
+addBackToTopButton();
 
 // SVG 5
 const svg5 = d3.select("#svg-container-5")

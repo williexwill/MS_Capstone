@@ -28,10 +28,16 @@ h3 {
     margin: 0.25em 0;
     color: #333333;
   }
-  
-p {
+
+p1 {
     font-family: "Amiri";
     font-size: 24px;
+    color: #333333;
+  }  
+
+p {
+    font-family: "Amiri";
+    font-size: 18px;
     color: #333333;
   }
   
