@@ -10,13 +10,13 @@ const svg1 = d3.select("#svg-container-1")
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// Create a green circle
+// Create a cyan circle
 svg1.append("circle")
   .attr("cx", 0 + margin.left)
   .attr("cy", 0)
   .attr("r", 20)
   .attr("fill", "none")
-  .attr("stroke", "#CCFFCC")
+  .attr("stroke", "cyan")
   .attr("stroke-width", 2);
 
 // Create a black pixel within the circle
@@ -25,7 +25,7 @@ svg1.append("rect")
   .attr("height", 1)
   .attr("x", -1 + margin.left)  
   .attr("y", -1)  
-  .attr("fill", "#333333");
+  .attr("fill", "black");
 
 //SVG 2
 const svg2 = d3.select("#svg-container-2")
@@ -41,7 +41,7 @@ svg2.append("rect")
 .attr("height", 100)
 .attr("x", 0)  
 .attr("y", 25)  
-.attr("fill", "#333333");
+.attr("fill", "black");
 
 //SVG 3
 const svg3 = d3.select("#svg-container-3")
@@ -57,7 +57,7 @@ svg3.append("rect")
 .attr("height", 1250)
 .attr("x", 0)  
 .attr("y", 25)  
-.attr("fill", "#333333");
+.attr("fill", "black");
 
 // SVG4 1 billion points of light
 // Constants
@@ -78,7 +78,7 @@ svg4.append("rect")
   .attr("height", 1250000)
   .attr("x", 0)
   .attr("y", 0)
-  .attr("fill", "#333333");
+  .attr("fill", "black");
 
 // Append the axis to the right side of the SVG
 const axisScale = d3.scaleLinear()
@@ -116,7 +116,7 @@ function loadDataAndProcess() {
         .attr("height", 1)
         .attr("x", d => d.Number % svgWidth)
         .attr("y", d => Math.floor(d.Number / svgWidth))
-        .attr("fill", "#CCFFCC")
+        .attr("fill", "cyan")
         .style("opacity", 1);
 
       // Append tooltips first
@@ -732,7 +732,7 @@ const rectanglesPerRow = 800 / (rectangleSize + marginBetweenRectangles);
 const firstRectangle = svg8.append("rect")
   .attr("width", rectangleSize)
   .attr("height", rectangleSize)
-  .attr("fill", "blue")
+  .attr("fill", "cyan")
   .attr("stroke", "rgba(191, 163, 63, 0.2)")
   .attr("stroke-width", 1)
   .attr("x", 0)
@@ -746,7 +746,7 @@ const firstLabel = svg8.append("text")
   .attr("y", -10) // Adjust the y-coordinate as needed
   .style("font-size", "12px") // Adjust the font size as needed
   .style("font-weight", "bold")
-  .style("fill", "#333333")
+  .style("fill", "black")
   .style("opacity", 1) // Make the first label visible initially
   .text("The average American household spent $87,432 in 2021");
  
@@ -760,7 +760,7 @@ for (let i = 1; i < totalRectangles; i++) {
   const rectangle = svg8.append("rect")
     .attr("width", rectangleSize)
     .attr("height", rectangleSize)
-    .attr("fill", "blue")
+    .attr("fill", "cyan")
     .attr("stroke", "rgba(191, 163, 63, 0.2)")
     .attr("stroke-width", 1)
     .attr("x", x)
@@ -777,7 +777,7 @@ const lastLabel = svg8.append("text")
   .attr("y", totalRectangles / rectanglesPerRow * (rectangleSize + marginBetweenRectangles) + 20) // Adjust the y-coordinate as needed
   .style("font-size", "12px") // Adjust the font size as needed
   .style("font-weight", "bold")
-  .style("fill", "#333333")
+  .style("fill", "black")
   .style("opacity", 0) // Make the last label initially invisible
   .text("A single billionaire could cover the costs of 11,437 American families for a year.");
 
@@ -899,7 +899,7 @@ const scene9 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG9
     const colorScale = d3.scaleOrdinal()
       .domain(wages.map(d => d.category))
-      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "blue", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
+      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "cyan", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
 
     // Bubble chart for SVG9
     const radiusScale = d3.scaleSqrt()
@@ -998,7 +998,7 @@ const scene10 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG10
     const colorScale10 = d3.scaleOrdinal()
       .domain(wages10.map(d => d.category))
-      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "blue", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
+      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "cyan", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
 
     // Bubble chart for SVG10
     const radiusScale10 = d3.scaleSqrt()
@@ -1103,7 +1103,7 @@ const scene11 = new ScrollMagic.Scene({
       .enter()
       .append("circle")
       .attr("r", d => radiusScale11(d.wage))
-      .style("fill", "blue")
+      .style("fill", "cyan")
       .style("stroke", "#333333")
       .style("stroke-width", "0.1px")
       .style("opacity", 0.7)
@@ -1163,7 +1163,7 @@ const scene12 = new ScrollMagic.Scene({
     // Color scale for SVG12
     const colorScale12 = d3.scaleOrdinal()
       .domain(wealth12.map(d => d.name))
-      .range(["#333333", "#FFA500", "blue"]);
+      .range(["#333333", "#FFA500", "cyan"]);
 
     // Bubble chart for SVG12
     const radiusScale12 = d3.scaleSqrt()

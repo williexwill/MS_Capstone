@@ -4,7 +4,7 @@ body {
     font-size: 16px;
     padding: 1em;
     color: #333333;
-    background-color: rgba(191, 163, 63, 0.2); 
+    background-color: #FFFFCC; 
   }
   
 h1 {
@@ -32,7 +32,7 @@ h3 {
 p1 {
     font-family: "Amiri";
     font-size: 24px;
-    padding: 1em;
+    padding: 1em; 
     color: #333333;
   }  
 
