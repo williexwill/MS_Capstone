@@ -11,43 +11,35 @@ h1 {
     font-family: "Aboreto";
     font-size: 4em;
     margin: 0.25em 0;
-    color: #333333;
-  }
-  
-h2 {
-      font-family: "Aboreto";
-      font-size: 2em;
-      margin: 0.25em 0;
-      color: #333333;
-      text-align: center;
-    }
-  
-h3 {
-    font-family: "Aboreto";
-    font-size: 1em;
-    margin: 0.25em 0;
-    color: #333333;
+    color: #FFFFCC;
+    position: relative;
   }
 
-p1 {
-    font-family: "Amiri";
-    font-size: 24px;
-    padding: 1em; 
-    color: #333333;
-  }  
+h1::before {
+    content: ''; /* Create an empty pseudo-element */
+    position:absolute;
+    top: -25px;
+    bottom: -25px;
+    left: -500px;
+    right: -500px;
+    background-color: #000000; 
+    z-index: -1; 
+}
 
 p {
     font-family: "Amiri";
     font-size: 18px;
     color: #333333;
   }
-  
-ul {font-family: "Amiri";
-      font-size: 16px;
-      color: #333333;
-  }
+
+.intro-paragraph {
+    font-family: "Amiri";
+    font-size: 24px;
+    color: #333333;
+  }  
   
 .text{
+      font-family: "Josefin Sans";
       color: #333333;
       fill: none;
   }
@@ -61,75 +53,35 @@ ul {font-family: "Amiri";
     margin-bottom: 1em;
     width: 100%; 
 }
-
-.d3-tip {
-    line-height: 1;
-    font-weight: bold;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 2px;
-  }
  
 .highlight {
     opacity: 1;
   }
 
-
-
 .tooltip {
     opacity: 0;
-    transition: opacity 0.5s ease; /* added 12/23 when playing with SVG4  */
+    transition: opacity 0.5s ease; 
     position: absolute;
-    background: white;
+    background: #CCFFCC;
     padding: 5px;
-    border: 1px solid black;
+    z-index: 9950;
+    border: none
 }
 
 #tooltip-svg5 {
   opacity: 0;
   position: absolute;
   z-index: 9999;
-  background: white;
+  background: #CCFFCC;
   padding: 5px;
-  border: 1px solid black;
+  border: none;
 }
 
 #tooltip-svg6 {
   opacity: 0;
   position: absolute;
   z-index: 9999;
-  background: white;
+  background: #CCFFCC;
   padding: 5px;
-  border: 1px solid black;
-}
-
-#compare-button {
-  display: inline-block;
-}
-
-#tooltip-container-svg8-firstrectangle {
-  opacity: 0;
-  position: absolute;
-  z-index: 9999;
-  background: white;
-  padding: 5px;
-  border: 1px solid black;
-  left: 0;
-  top: 0;
-}
-
-#tooltip-container-svg8-lastrectangle {
-  opacity: 0;
-  position: absolute;
-  z-index: 9999;
-  background: white;
-  padding: 5px;
-  border: 1px solid black;
-  left: 0;
-  top: 0;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #333333; /* Color of the thumb */
+  border: none;
 }

@@ -25,7 +25,7 @@ svg1.append("rect")
   .attr("height", 1)
   .attr("x", -1 + margin.left)  
   .attr("y", -1)  
-  .attr("fill", "#333333");
+  .attr("fill", "#000000");
 
 //SVG 2
 const svg2 = d3.select("#svg-container-2")
@@ -41,7 +41,7 @@ svg2.append("rect")
 .attr("height", 100)
 .attr("x", 0)  
 .attr("y", 25)  
-.attr("fill", "#333333");
+.attr("fill", "#000000");
 
 //SVG 3
 const svg3 = d3.select("#svg-container-3")
@@ -57,7 +57,7 @@ svg3.append("rect")
 .attr("height", 1250)
 .attr("x", 0)  
 .attr("y", 25)  
-.attr("fill", "#333333");
+.attr("fill", "#000000");
 
 // SVG4 1 billion points of light
 // Constants
@@ -78,7 +78,7 @@ svg4.append("rect")
   .attr("height", 1250000)
   .attr("x", 0)
   .attr("y", 0)
-  .attr("fill", "#333333");
+  .attr("fill", "#000000");
 
 // Append the axis to the right side of the SVG
 const axisScale = d3.scaleLinear()
@@ -116,7 +116,7 @@ function loadDataAndProcess() {
         .attr("height", 1)
         .attr("x", d => d.Number % svgWidth)
         .attr("y", d => Math.floor(d.Number / svgWidth))
-        .attr("fill", "#CCFFCC")
+        .attr("fill", "#FFFFCC")
         .style("opacity", 1);
 
       // Append tooltips first
@@ -167,12 +167,12 @@ function loadDataAndProcess() {
         .attr("x", d => d.Number % svgWidth - 5)
         .attr("y", d => Math.floor(d.Number / svgWidth) - 5)
         .attr("fill", "none")
-        .attr("pointer-events", "all");
+        .attr("pointer-events", "all")
+        .style("z-index", 9999);
 
       // Select and raise the trigger areas to the front
       svg4.selectAll("g.trigger-area")
         .raise()
-        .style("z-index", 9999)
         .selectAll("rect")
             .raise()
             .style("z-index", 9999); //This is supposed to keep the tool tip triggers above the hidden tool tip containers, but it isn't working
@@ -205,7 +205,7 @@ function loadDataAndProcess() {
           const tooltip = d3.select(`#tooltip-container-${d.Number}`);
 
           // Fade in tooltip with no delay
-          tooltipTimeline.to(tooltip.node(), { opacity: 1, duration: 1 });
+          tooltipTimeline.to(tooltip.node(), { opacity: .75, duration: 1 });
 
           // Fade out tooltip after a fixed delay
           tooltipTimeline.to(tooltip.node(), { opacity: 0, duration: 1, delay: 3 });
@@ -238,7 +238,7 @@ function loadDataAndProcess() {
       function showTooltip(number) {
         d3.selectAll(".tooltip").style("opacity", 0);
         const tooltip = d3.select(`#tooltip-container-${number}`);
-        tooltip.style("opacity", 1).style("z-index", 9999);
+        tooltip.style("opacity", .75).style("z-index", 9999);
       }
     })
     .catch(error => console.error("Error loading data:", error));
@@ -519,7 +519,7 @@ d3.csv("data/StLou_clean.csv", d => ({
   // Function to handle mouseover event for SVG5
   const handleMouseOverSVG5 = (event, d) => {
     const tooltip5 = d3.select("#tooltip-svg5");
-    tooltip5.transition().duration(200).style("opacity", 0.9);
+    tooltip5.transition().duration(200).style("opacity", 0.75);
 
     tooltip5.html(`
       <p>Department: ${d.Department}</p>
@@ -537,7 +537,7 @@ d3.csv("data/StLou_clean.csv", d => ({
 
   // Function to define the categorical color scale for SVG5
   const colorScaleSVG5 = d3.scaleOrdinal()
-    .range(["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]);
+    .range(['#FF9933', "#0000FF", "#FF0033", "#009900", "#FFFF00", "#660099", "#FF3399", "#990000", "#003300", "#000066", "#666600"]);
 
   // Append bars for SVG5 with categorical color
   svg5.selectAll(".bar")
@@ -576,9 +576,9 @@ function startSVG5Animation() {
   // Select all bars in SVG5 and start the animation
   svg5.selectAll(".bar")
     .transition()
-    .delay((d, i) => i * 300) // Adjusted delay for a slower animation
-    .attr("y", d => yScale(d.Spending)) // Move bars to their actual position
-    .attr("height", d => 400 - yScale(d.Spending)); // Set the final height
+    .delay((d, i) => i * 300) 
+    .attr("y", d => yScale(d.Spending)) 
+    .attr("height", d => 400 - yScale(d.Spending));
 }
 });
 
@@ -645,7 +645,7 @@ d3.csv("data/BLS_2021_clean.csv", d => ({
   // Function to handle mouseover event for SVG6
   const handleMouseOverSVG6 = (event, d) => {
     const tooltip6 = d3.select("#tooltip-svg6");
-    tooltip6.transition().duration(200).style("opacity", 0.9);
+    tooltip6.transition().duration(200).style("opacity", 0.75);
 
     tooltip6.html(`
       <p>Category: ${d.Category}</p>
@@ -663,7 +663,7 @@ const handleMouseOutSVG6 = (event, d) => {
 
   // Function to define the categorical color scale for SVG6
   const colorScaleSVG6 = d3.scaleOrdinal()
-    .range(["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f"]);
+    .range(['#FF9933', "#0000FF", "#FF0033", "#009900", "#FFFF00", "#660099", "#FF3399", "#990000", "#003300", "#000066", "#666600"]);
 
   // Append bars for SVG6 with categorical color
   svg6.selectAll(".bar")
@@ -702,9 +702,9 @@ function startSVG6Animation() {
   // Select all bars in SVG6 and start the animation
   svg6.selectAll(".bar")
     .transition()
-    .delay((d, i) => i * 300) // Adjusted delay for a slower animation
-    .attr("y", d => yScale6(d.Spending)) // Move bars to their actual position
-    .attr("height", d => 400 - yScale6(d.Spending)); // Set the final height
+    .delay((d, i) => i * 300) 
+    .attr("y", d => yScale6(d.Spending)) 
+    .attr("height", d => 400 - yScale6(d.Spending)); 
 }
 });
 
@@ -732,8 +732,8 @@ const rectanglesPerRow = 800 / (rectangleSize + marginBetweenRectangles);
 const firstRectangle = svg8.append("rect")
   .attr("width", rectangleSize)
   .attr("height", rectangleSize)
-  .attr("fill", "blue")
-  .attr("stroke", "rgba(191, 163, 63, 0.2)")
+  .attr("fill", "#CCFFCC")
+  .attr("stroke", "#000000")
   .attr("stroke-width", 1)
   .attr("x", 0)
   .attr("y", 0)
@@ -760,8 +760,8 @@ for (let i = 1; i < totalRectangles; i++) {
   const rectangle = svg8.append("rect")
     .attr("width", rectangleSize)
     .attr("height", rectangleSize)
-    .attr("fill", "blue")
-    .attr("stroke", "rgba(191, 163, 63, 0.2)")
+    .attr("fill", "#CCFFCC")
+    .attr("stroke", "#000000")
     .attr("stroke-width", 1)
     .attr("x", x)
     .attr("y", y)
@@ -818,7 +818,7 @@ const svg9a = d3
 const hourlyData = [{ category: "Hourly", wage: 7.25 }];
 
 // Color scale (using the same color scale as SVG9)
-const colorScale9a = d3.scaleOrdinal().domain(hourlyData.map((d) => d.category)).range(d3.schemeCategory10);
+const colorScale9a = d3.scaleOrdinal().domain(hourlyData.map((d) => d.category)).range(['#FF9933', "#0000FF", "#FF0033", "#009900", "#FFFF00", "#660099", "#FF3399", "#990000", "#003300", "#000066", "#666600"]);
 
 // Circle
 const circle9a = svg9a
@@ -842,7 +842,7 @@ const text9a = svg9a
   .style("font-size", "12px") // Adjust the font size as needed
   .style("font-weight", "bold")
   .style("font-family", "sans-serif")
-  .style("fill", "white")
+  .style("fill", "#FFFFCC")
   .text(`${hourlyData[0].category} Wage:\n$${hourlyData[0].wage.toLocaleString(2)}`)
   .style("opacity", 0);
 
@@ -899,7 +899,7 @@ const scene9 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG9
     const colorScale = d3.scaleOrdinal()
       .domain(wages.map(d => d.category))
-      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "blue", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
+      .range(['#FF9933', "#0000FF", "#FF0033", "#009900", "#FFFF00", "#660099", "#FF3399", "#990000", "#003300", "#000066", "#666600"]);
 
     // Bubble chart for SVG9
     const radiusScale = d3.scaleSqrt()
@@ -998,7 +998,7 @@ const scene10 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG10
     const colorScale10 = d3.scaleOrdinal()
       .domain(wages10.map(d => d.category))
-      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "blue", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]);
+      .range(['#FF9933', "#0000FF", "#FF0033", "#009900", "#FFFF00", "#CCFFCC"]);
 
     // Bubble chart for SVG10
     const radiusScale10 = d3.scaleSqrt()
@@ -1031,7 +1031,7 @@ const scene10 = new ScrollMagic.Scene({
       .style("font-size", "14px") // Adjust the font size as needed
       .style("font-weight", "bold")
       .style("font-family", "sans-serif")
-      .style("fill", "white")
+      .style("fill", "#FFFFCC")
       .text(`${maxData10.category} Wage:\n$${maxData10.wage.toLocaleString()}`);
 
     simulation10.nodes(wages10)
@@ -1054,7 +1054,7 @@ const scene10 = new ScrollMagic.Scene({
     bubbles10.on("mouseover", function (event, d) {
       tooltip10.transition()
         .duration(200)
-        .style("opacity", .9);
+        .style("opacity", .75);
       tooltip10.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toLocaleString(2)}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 28) + "px");
@@ -1103,14 +1103,14 @@ const scene11 = new ScrollMagic.Scene({
       .enter()
       .append("circle")
       .attr("r", d => radiusScale11(d.wage))
-      .style("fill", "blue")
-      .style("stroke", "#333333")
+      .style("fill", "#CCFFCC")
+      .style("stroke", "#000000")
       .style("stroke-width", "0.1px")
       .style("opacity", 0.7)
       .on("mouseover", function (event, d) {
         tooltip11.transition()
           .duration(200)
-          .style("opacity", .9);
+          .style("opacity", .75);
         tooltip11.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toLocaleString()}`)
           .style("left", (event.pageX + 10) + "px")
           .style("top", (event.pageY - 28) + "px");
@@ -1163,7 +1163,7 @@ const scene12 = new ScrollMagic.Scene({
     // Color scale for SVG12
     const colorScale12 = d3.scaleOrdinal()
       .domain(wealth12.map(d => d.name))
-      .range(["#333333", "#FFA500", "blue"]);
+      .range(["#000000", "#FF9933", "#CCFFCC"]);
 
     // Bubble chart for SVG12
     const radiusScale12 = d3.scaleSqrt()
@@ -1171,9 +1171,9 @@ const scene12 = new ScrollMagic.Scene({
       .range([0, 200]);
 
     const simulation12 = d3.forceSimulation(wealth12)
-      .force("x", d3.forceX(400 + margin.left).strength(0.05)) // Center the bubbles with higher strength
-      .force("y", d3.forceY(200 + margin.top).strength(0.1)) // Adjust the vertical position with higher strength
-      .force("collide", d3.forceCollide(d => radiusScale12(d.wealth) + 2).iterations(2)); // Prevent overlapping with more iterations
+      .force("x", d3.forceX(400 + margin.left).strength(0.05))
+      .force("y", d3.forceY(200 + margin.top).strength(0.1)) 
+      .force("collide", d3.forceCollide(d => radiusScale12(d.wealth) + 2).iterations(2)); 
 
     const bubbles12 = svg12.selectAll("circle")
       .data(wealth12)
@@ -1193,7 +1193,7 @@ const scene12 = new ScrollMagic.Scene({
       .style("font-size", "14px") // Adjust the font size as needed
       .style("font-weight", "bold")
       .style("font-family", "sans-serif")
-      .style("fill", "white")
+      .style("fill", "#FFFFCC")
       .text(`${maxData12.name}`);
 
     simulation12.nodes(wealth12)
@@ -1216,7 +1216,7 @@ const scene12 = new ScrollMagic.Scene({
     bubbles12.on("mouseover", function (event, d) {
       tooltip12.transition()
         .duration(200)
-        .style("opacity", .9);
+        .style("opacity", .75);
       tooltip12.html(`<strong>${d.name}</strong><br>$${d.wealth.toLocaleString()}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 28) + "px");
@@ -1260,7 +1260,7 @@ const scene13 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG13
     const colorScale13 = d3.scaleOrdinal()
       .domain(wealth13.map(d => d.name))
-      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#333333", "#FFA500"]); 
+      .range(["#0000FF", "#FF0033", "#009900", "#FFFF00", "#660099", "#000000", "#FF9933"]); 
 
     // Bubble chart for SVG13
     const radiusScale13 = d3.scaleSqrt()
@@ -1291,7 +1291,7 @@ const scene13 = new ScrollMagic.Scene({
       .style("font-size", "14px") 
       .style("font-weight", "bold")
       .style("font-family", "sans-serif")
-      .style("fill", "white")
+      .style("fill", "#FFFFCC")
       .text(d => `${d.name}\n$${d.wealth.toLocaleString()}`)
       .attr("x", d => d.x)
       .attr("y", d => d.y);
@@ -1316,7 +1316,7 @@ const scene13 = new ScrollMagic.Scene({
     bubbles13.on("mouseover", function (event, d) {
       tooltip13.transition()
         .duration(200)
-        .style("opacity", .9);
+        .style("opacity", .75);
       tooltip13.html(`<strong>${d.name}</strong><br>Wealth: $${d.wealth.toLocaleString()}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 28) + "px");
