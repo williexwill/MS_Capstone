@@ -744,8 +744,9 @@ const firstRectangle = svg8.append("rect")
 const firstLabel = svg8.append("text")
   .attr("x", 0)
   .attr("y", -10) // Adjust the y-coordinate as needed
-  .style("font-size", "12px") // Adjust the font size as needed
+  .style("font-size", "16px") 
   .style("font-weight", "bold")
+  .style("font-family", "Josefin Sans")
   .style("fill", "#333333")
   .style("opacity", 1) // Make the first label visible initially
   .text("The average American household spent $87,432 in 2021");
@@ -775,8 +776,9 @@ const lastRectangleX = (totalRectangles % rectanglesPerRow) * (rectangleSize + m
 const lastLabel = svg8.append("text")
   .attr("x", 800 + margin.left + margin.right - lastRectangleX)
   .attr("y", totalRectangles / rectanglesPerRow * (rectangleSize + marginBetweenRectangles) + 20) // Adjust the y-coordinate as needed
-  .style("font-size", "12px") // Adjust the font size as needed
+  .style("font-size", "14px") 
   .style("font-weight", "bold")
+  .style("font-family", "Josefin Sans")
   .style("fill", "#333333")
   .style("opacity", 0) // Make the last label initially invisible
   .text("A single billionaire could cover the costs of 11,437 American families for a year.");
@@ -837,14 +839,26 @@ const text9a = svg9a
   .append("text")
   .attr("x", 50)
   .attr("y", 50)
-  .attr("dy", "0.35em")
-  .style("text-anchor", "middle")
-  .style("font-size", "12px") // Adjust the font size as needed
+  .style("font-size", "16px") 
   .style("font-weight", "bold")
-  .style("font-family", "sans-serif")
+  .style("font-family", "Josefin Sans")
   .style("fill", "#FFFFCC")
-  .text(`${hourlyData[0].category} Wage:\n$${hourlyData[0].wage.toLocaleString(2)}`)
   .style("opacity", 0);
+
+// Append the first line of text
+text9a
+  .append("tspan")
+  .text(`${hourlyData[0].category} Wage:`)
+  .attr("dy", "0.35em")
+  .style("text-anchor", "middle"); 
+
+// Append the second line of text
+text9a
+  .append("tspan")
+  .text(`$${hourlyData[0].wage.toLocaleString(2)}`)
+  .attr("dy", "1em")
+  .style("text-anchor", "middle"); 
+
 
 // Unique names for ScrollMagic controller and scene
 const controller9a = new ScrollMagic.Controller();
@@ -861,7 +875,7 @@ const scene9a = new ScrollMagic.Scene({
 
     // Add animations to the timeline
     timeline9a
-      .to(circle9a.node(), { duration: 1, opacity: 0.7 }) // Transition for the circle
+      .to(circle9a.node(), { duration: 1, opacity: 1 }) // Transition for the circle
       .to(text9a.node(), { duration: 1, opacity: 1 }, "-=0.5"); // Transition for the text in the circle
 
     // Add the timeline to the scene
@@ -899,7 +913,7 @@ const scene9 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG9
     const colorScale = d3.scaleOrdinal()
       .domain(wages.map(d => d.category))
-      .range(['#FF9933', "#0000FF", "#FF0033", "#009900", "#FFFF00", "#660099", "#FF3399", "#990000", "#003300", "#000066", "#666600"]);
+      .range(['#FF9933', "#0000FF", "#FF0033", "#FFFF00", "#009900", "#660099", "#FF3399", "#990000", "#003300", "#000066", "#666600"]);
 
     // Bubble chart for SVG9
     const radiusScale = d3.scaleSqrt()
@@ -919,7 +933,7 @@ const scene9 = new ScrollMagic.Scene({
       .append("circle")
       .attr("r", d => radiusScale(d.wage))
       .style("fill", d => colorScale(d.category))
-      .style("opacity", 0.7);
+      .style("opacity", 1);
 
     // Find the data of the largest bubble for SVG9
     const maxData = wages.reduce((maxData, d) => d.wage > maxData.wage ? d : maxData, wages[0]);
@@ -929,10 +943,10 @@ const scene9 = new ScrollMagic.Scene({
       .attr("transform", `translate(${margin.left},${margin.top})`)
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
-      .style("font-size", "14px") // Adjust the font size as needed
+      .style("font-size", "16px") 
       .style("font-weight", "bold")
-      .style("font-family", "sans-serif")
-      .style("fill", "white")
+      .style("font-family", "Josefin Sans")
+      .style("fill", "#FFFFCC")
       .text(`${maxData.category} Wage:\n$${maxData.wage.toLocaleString()}`);
 
     simulation.nodes(wages)
@@ -998,7 +1012,7 @@ const scene10 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG10
     const colorScale10 = d3.scaleOrdinal()
       .domain(wages10.map(d => d.category))
-      .range(['#FF9933', "#0000FF", "#FF0033", "#009900", "#FFFF00", "#CCFFCC"]);
+      .range(['#FF9933', "#0000FF", "#FF0033", "#FFFF00", "#009900", "#CCFFCC"]);
 
     // Bubble chart for SVG10
     const radiusScale10 = d3.scaleSqrt()
@@ -1018,7 +1032,7 @@ const scene10 = new ScrollMagic.Scene({
       .append("circle")
       .attr("r", d => radiusScale10(d.wage))
       .style("fill", d => colorScale10(d.category))
-      .style("opacity", 0.7);
+      .style("opacity", 1);
 
     // Find the data of the largest bubble for SVG10
     const maxData10 = wages10.reduce((maxData, d) => d.wage > maxData.wage ? d : maxData, wages10[0]);
@@ -1028,9 +1042,9 @@ const scene10 = new ScrollMagic.Scene({
       .attr("transform", `translate(${margin.left},${margin.top})`)
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
-      .style("font-size", "14px") // Adjust the font size as needed
+      .style("font-size", "16px") 
       .style("font-weight", "bold")
-      .style("font-family", "sans-serif")
+      .style("font-family", "Josefin Sans")
       .style("fill", "#FFFFCC")
       .text(`${maxData10.category} Wage:\n$${maxData10.wage.toLocaleString()}`);
 
@@ -1106,7 +1120,7 @@ const scene11 = new ScrollMagic.Scene({
       .style("fill", "#CCFFCC")
       .style("stroke", "#000000")
       .style("stroke-width", "0.1px")
-      .style("opacity", 0.7)
+      .style("opacity", 1)
       .on("mouseover", function (event, d) {
         tooltip11.transition()
           .duration(200)
@@ -1181,7 +1195,7 @@ const scene12 = new ScrollMagic.Scene({
       .append("circle")
       .attr("r", d => radiusScale12(d.wealth))
       .style("fill", d => colorScale12(d.name))
-      .style("opacity", 0.7);
+      .style("opacity", 1);
 
     // Find the data of the largest bubble for SVG12
     const maxData12 = wealth12.reduce((maxData, d) => d.wealth > maxData.wealth ? d : maxData, wealth12[0]);
@@ -1190,9 +1204,9 @@ const scene12 = new ScrollMagic.Scene({
     const textLabel12 = svg12.append("text")
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
-      .style("font-size", "14px") // Adjust the font size as needed
+      .style("font-size", "16px") 
       .style("font-weight", "bold")
-      .style("font-family", "sans-serif")
+      .style("font-family", "Josefin Sans")
       .style("fill", "#FFFFCC")
       .text(`${maxData12.name}`);
 
@@ -1260,8 +1274,8 @@ const scene13 = new ScrollMagic.Scene({
     // Ordinal color scale for SVG13
     const colorScale13 = d3.scaleOrdinal()
       .domain(wealth13.map(d => d.name))
-      .range(["#0000FF", "#FF0033", "#009900", "#FFFF00", "#660099", "#000000", "#FF9933"]); 
-
+      .range(["#660099", "#FF3399", "#990000", "#003300", "#000066", "#000000", "#FF9933"]); 
+    
     // Bubble chart for SVG13
     const radiusScale13 = d3.scaleSqrt()
       .domain([0, d3.max(wealth13, d => d.wealth)])
@@ -1278,7 +1292,7 @@ const scene13 = new ScrollMagic.Scene({
       .append("circle")
       .attr("r", d => radiusScale13(d.wealth))
       .style("fill", d => colorScale13(d.name))
-      .style("opacity", 0.7);
+      .style("opacity", 1);
 
     // Append text only to the bubbles with 'wealth' value > 1000000001 for SVG13
     const textLabels13 = svg13.selectAll(".text-label")
@@ -1288,11 +1302,11 @@ const scene13 = new ScrollMagic.Scene({
       .attr("class", "text-label")
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
-      .style("font-size", "14px") 
+      .style("font-size", "16px") 
       .style("font-weight", "bold")
-      .style("font-family", "sans-serif")
+      .style("font-family", "Josefin Sans")
       .style("fill", "#FFFFCC")
-      .text(d => `${d.name}\n$${d.wealth.toLocaleString()}`)
+      .text(d => `${d.name}`)
       .attr("x", d => d.x)
       .attr("y", d => d.y);
 
