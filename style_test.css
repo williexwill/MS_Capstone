@@ -52,15 +52,15 @@ p {
     text-align: center;
     background-color: #CCFFCC; 
     color: white;
-    font-family: "Josefin Sans";
+    font-family: "Josefin Sans", sans-serif;
 }
 
 .tick {
-  font-family: "Josefin Sans";
+  font-family: "Josefin Sans", sans-serif;
 }  
 
 .text {
-    font-family: "Josefin Sans";
+    font-family: "Josefin Sans", sans-serif;
     color: #333333;
     fill: none;
 }

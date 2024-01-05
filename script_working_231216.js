@@ -841,7 +841,7 @@ const text9a = svg9a
   .attr("x", 50)
   .attr("y", 50)
   .style("font-size", "16px") 
-  .style("font-weight", "bold")
+  .style("font-weight", "semi-bold")
   .style("font-family", "Josefin Sans")
   .style("fill", "#FFFFCC")
   .style("opacity", 0);
@@ -945,7 +945,7 @@ const scene9 = new ScrollMagic.Scene({
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
       .style("font-size", "16px") 
-      .style("font-weight", "bold")
+      .style("font-weight", "semi-bold")
       .style("font-family", "Josefin Sans")
       .style("fill", "#FFFFCC")
       .text(`${maxData.category} Wage:\n$${maxData.wage.toLocaleString()}`);
@@ -1044,9 +1044,9 @@ const scene10 = new ScrollMagic.Scene({
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
       .style("font-size", "16px") 
-      .style("font-weight", "bold")
+      .style("font-weight", "semi-bold")
       .style("font-family", "Josefin Sans")
-      .style("fill", "#FFFFCC")
+      .style("fill", "white")
       .text(`${maxData10.category} Wage:\n$${maxData10.wage.toLocaleString()}`);
 
     simulation10.nodes(wages10)
@@ -1206,7 +1206,7 @@ const scene12 = new ScrollMagic.Scene({
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
       .style("font-size", "16px") 
-      .style("font-weight", "bold")
+      .style("font-weight", "semi-bold")
       .style("font-family", "Josefin Sans")
       .style("fill", "#FFFFCC")
       .text(`${maxData12.name}`);
@@ -1304,7 +1304,7 @@ const scene13 = new ScrollMagic.Scene({
       .attr("dy", "0.35em")
       .style("text-anchor", "middle")
       .style("font-size", "16px") 
-      .style("font-weight", "bold")
+      .style("font-weight", "semi-bold")
       .style("font-family", "Josefin Sans")
       .style("fill", "#FFFFCC")
       .text(d => `${d.name}`)
