@@ -252,8 +252,9 @@ function addSkipToBottomButton() {
   // Append the button to the body
   const skipToBottomButton = d3.select("body")
     .append("button")
+    .attr("class", "button")
     .attr("id", "skipToBottomButton")
-    .text("Skip to Bottom")
+    .text("SKIP TO BOTTOM")
     .style("position", "fixed")
     .style("bottom", "10px")
     .style("right", "10px")
@@ -341,10 +342,11 @@ function addNextButton() {
   // Append the button to the body
   const nextButton = d3.select("body")
     .append("button")
+    .attr("class", "button")
     .attr("id", "nextButton")
-    .text("Next")
+    .text("NEXT")
     .style("position", "fixed")
-    .style("bottom", "50px")
+    .style("bottom", "77px")
     .style("right", "10px")
     .style("display", "none"); // Initially hide the button
 
@@ -410,10 +412,11 @@ function addBackToTopButton() {
   // Append the button to the body
   const backToTopButton = d3.select("body")
     .append("button")
+    .attr("class", "button")
     .attr("id", "backToTopButton")
-    .text("Back to Top")
+    .text("BACK TO TOP")
     .style("position", "fixed")
-    .style("bottom", "90px") // Adjust the position as needed
+    .style("bottom", "130px") // Adjust the position as needed
     .style("right", "10px")
     .style("display", "none"); // Initially hide the button
 

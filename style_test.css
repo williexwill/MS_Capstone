@@ -4,7 +4,11 @@ body {
     font-size: 16px;
     padding: 1em;
     color: #333333;
-    background-color: #FFFFCC; 
+    background-color: #FFFFCC;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 20px; 
   }
   
 h1 {
@@ -36,7 +40,20 @@ p {
     font-family: "Amiri";
     font-size: 24px;
     color: #333333;
-  }  
+  }
+  
+.button {
+    border-radius: 4px;
+    width: 150px;
+    padding: 15px 32px;
+    display: block;
+    opacity: .9;
+    border: 0.1px solid #333333;
+    text-align: center;
+    background-color: #CCFFCC; 
+    color: white;
+    font-family: "Josefin Sans";
+}
 
 .tick {
   font-family: "Josefin Sans";
