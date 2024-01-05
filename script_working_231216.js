@@ -737,7 +737,7 @@ const firstRectangle = svg8.append("rect")
   .attr("height", rectangleSize)
   .attr("fill", "#CCFFCC")
   .attr("stroke", "#000000")
-  .attr("stroke-width", 1)
+  .attr("stroke-width", .8)
   .attr("x", 0)
   .attr("y", 0)
   .style("opacity", 1) // Make the first rectangle visible initially
@@ -748,7 +748,6 @@ const firstLabel = svg8.append("text")
   .attr("x", 0)
   .attr("y", -10) // Adjust the y-coordinate as needed
   .style("font-size", "16px") 
-  .style("font-weight", "bold")
   .style("font-family", "Josefin Sans")
   .style("fill", "#333333")
   .style("opacity", 1) // Make the first label visible initially
@@ -766,7 +765,7 @@ for (let i = 1; i < totalRectangles; i++) {
     .attr("height", rectangleSize)
     .attr("fill", "#CCFFCC")
     .attr("stroke", "#000000")
-    .attr("stroke-width", 1)
+    .attr("stroke-width", .3)
     .attr("x", x)
     .attr("y", y)
     .style("opacity", 0)
@@ -779,8 +778,7 @@ const lastRectangleX = (totalRectangles % rectanglesPerRow) * (rectangleSize + m
 const lastLabel = svg8.append("text")
   .attr("x", 800 + margin.left + margin.right - lastRectangleX)
   .attr("y", totalRectangles / rectanglesPerRow * (rectangleSize + marginBetweenRectangles) + 20) // Adjust the y-coordinate as needed
-  .style("font-size", "14px") 
-  .style("font-weight", "bold")
+  .style("font-size", "16px") 
   .style("font-family", "Josefin Sans")
   .style("fill", "#333333")
   .style("opacity", 0) // Make the last label initially invisible
