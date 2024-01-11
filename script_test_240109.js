@@ -122,9 +122,11 @@ function createTooltips(data) {
             .style("top", `${svg4.node().getBoundingClientRect().top + adjustedY + margin.top + tooltipMargin}px`);
     
         tooltipDiv.append("p")
+            .attr("id", 'tooltip-number')
             .text(`${d.Number_format}`);
     
         tooltipDiv.append("p")
+            .attr("id", 'tooltip-description')
             .text(`${d.Description_short}`);
     
         // Set the height dynamically based on the content
@@ -529,7 +531,7 @@ d3.csv("data/StLou_clean.csv", d => ({
   // Function to handle mouseover event for SVG5
   const handleMouseOverSVG5 = (event, d) => {
     const tooltip5 = d3.select("#tooltip-svg5");
-    tooltip5.transition().duration(200).style("opacity", 0.75);
+    tooltip5.transition().duration(200).style("opacity", 0.9);
 
     tooltip5.html(`
       <p>Department: ${d.Department}</p>
@@ -655,10 +657,10 @@ d3.csv("data/BLS_2021_clean.csv", d => ({
   // Function to handle mouseover event for SVG6
   const handleMouseOverSVG6 = (event, d) => {
     const tooltip6 = d3.select("#tooltip-svg6");
-    tooltip6.transition().duration(200).style("opacity", 0.75);
+    tooltip6.transition().duration(200).style("opacity", 0.9);
 
     tooltip6.html(`
-      <p>Category: ${d.Category}</p>
+      <p>${d.Category}</p>
       <p>Spending: ${formatCurrency.format(d.Spending)}</p>
     `)
       .style("left", `${event.pageX}px`)
@@ -972,13 +974,14 @@ const scene9 = new ScrollMagic.Scene({
     // Tooltip for SVG9
     const tooltip = d3.select("#svg-container-9").append("div")
       .attr("class", "tooltip")
+      .style("font-family", "Josefin Sans")
       .style("opacity", 0);
 
     bubbles.on("mouseover", function (event, d) {
       tooltip.transition()
         .duration(200)
         .style("opacity", .9);
-      tooltip.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toLocaleString(2)}`)
+      tooltip.html(`${d.category}<br>Wage: $${d.wage.toLocaleString(2)}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 28) + "px");
     })
@@ -1071,13 +1074,14 @@ const scene10 = new ScrollMagic.Scene({
     // Tooltip for SVG10
     const tooltip10 = d3.select("#svg-container-10").append("div")
       .attr("class", "tooltip")
+      .style("font-family", "Josefin Sans")
       .style("opacity", 0);
 
     bubbles10.on("mouseover", function (event, d) {
       tooltip10.transition()
         .duration(200)
         .style("opacity", .75);
-      tooltip10.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toLocaleString(2)}`)
+      tooltip10.html(`${d.category}<br>Wage: $${d.wage.toLocaleString(2)}`)
         .style("left", (event.pageX + 10) + "px")
         .style("top", (event.pageY - 28) + "px");
     })
@@ -1132,8 +1136,9 @@ const scene11 = new ScrollMagic.Scene({
       .on("mouseover", function (event, d) {
         tooltip11.transition()
           .duration(200)
+          .style("font-family", "Josefin Sans")
           .style("opacity", .75);
-        tooltip11.html(`<strong>${d.category}</strong><br>Wage: $${d.wage.toLocaleString()}`)
+        tooltip11.html(`${d.category}<br>Wage: $${d.wage.toLocaleString()}`)
           .style("left", (event.pageX + 10) + "px")
           .style("top", (event.pageY - 28) + "px");
       })
@@ -1179,7 +1184,7 @@ const scene12 = new ScrollMagic.Scene({
     const wealth12 = [
       { name: "One Billion Dollars", wealth: 1000000000 },
       { name: "Top One Percent", wealth: 11100000 },
-      { name: "lifetime minimum wage", wealth: 725000 },
+      { name: "Lifetime Minimum Wage", wealth: 725000 },
     ];
 
     // Color scale for SVG12
@@ -1233,6 +1238,7 @@ const scene12 = new ScrollMagic.Scene({
     // Tooltip for SVG12
     const tooltip12 = d3.select("#svg-container-12").append("div")
       .attr("class", "tooltip")
+      .style("font-family", "Josefin Sans")
       .style("opacity", 0);
 
     bubbles12.on("mouseover", function (event, d) {
@@ -1277,12 +1283,13 @@ const scene13 = new ScrollMagic.Scene({
       { name: "Warren Buffett", wealth: 119700000000 },
       { name: "One Billion Dollars", wealth: 1000000000 },
       { name: "Top One Percent", wealth: 11100000 },
+      { name: "Lifetime Minimum Wage", wealth: 725000 },
     ];
 
     // Ordinal color scale for SVG13
     const colorScale13 = d3.scaleOrdinal()
       .domain(wealth13.map(d => d.name))
-      .range(["#660099", "#FF3399", "#990000", "#003300", "#000066", "#000000", "#FF9933"]); 
+      .range(["#660099", "#FF3399", "#990000", "#003300", "#000066", "#000000", "#FF9933", "#CCFFCC"]); 
     
     // Bubble chart for SVG13
     const radiusScale13 = d3.scaleSqrt()
@@ -1333,6 +1340,7 @@ const scene13 = new ScrollMagic.Scene({
     // Tooltip for SVG13
     const tooltip13 = d3.select("#svg-container-13").append("div")
       .attr("class", "tooltip")
+      .style("font-family", "Josefin Sans")
       .style("opacity", 0);
 
     bubbles13.on("mouseover", function (event, d) {

@@ -86,7 +86,20 @@ p {
     background: #CCFFCC;
     padding: 5px;
     z-index: 9950;
-    border: none
+    border: none;
+    border-radius: 4px;
+}
+
+#tooltip-number {
+  font-family: "Aboreto";
+  font-size: 18px;
+  color: #333333;
+}
+
+#tooltip-description {
+  font-family: "Josefin Sans Light";
+  font-size: 12px;
+  color: #333333;
 }
 
 #tooltip-svg5 {
@@ -96,6 +109,13 @@ p {
   background: #CCFFCC;
   padding: 5px;
   border: none;
+  border-radius: 4px;
+}
+
+#tooltip-svg5 p {
+  font-family: "Josefin Sans Light";
+  font-size: 12px;
+  color: #333333;
 }
 
 #tooltip-svg6 {
@@ -105,4 +125,11 @@ p {
   background: #CCFFCC;
   padding: 5px;
   border: none;
+  border-radius: 4px;
+}
+
+#tooltip-svg6 p {
+  font-family: "Josefin Sans Light";
+  font-size: 12px;
+  color: #333333;
 }
