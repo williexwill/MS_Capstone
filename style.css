@@ -4,53 +4,66 @@ body {
     font-size: 16px;
     padding: 1em;
     color: #333333;
-    background-color: rgba(191, 163, 63, 0.2); 
+    background-color: #FFFFCC;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 20px; 
   }
   
 h1 {
     font-family: "Aboreto";
     font-size: 4em;
     margin: 0.25em 0;
-    color: #333333;
-  }
-  
-h2 {
-      font-family: "Aboreto";
-      font-size: 2em;
-      margin: 0.25em 0;
-      color: #333333;
-      text-align: center;
-    }
-  
-h3 {
-    font-family: "Aboreto";
-    font-size: 1em;
-    margin: 0.25em 0;
-    color: #333333;
+    color: #FFFFCC;
+    position: relative;
   }
 
-p1 {
-    font-family: "Amiri";
-    font-size: 24px;
-    padding: 1em;
-    color: #333333;
-  }  
+h1::before {
+    content: ''; /* Create an empty pseudo-element */
+    position:absolute;
+    top: -25px;
+    bottom: -25px;
+    left: -500px;
+    right: -500px;
+    background-color: #000000; 
+    z-index: -1; 
+}
 
 p {
     font-family: "Amiri";
     font-size: 18px;
     color: #333333;
   }
-  
-ul {font-family: "Amiri";
-      font-size: 16px;
-      color: #333333;
+
+.intro-paragraph {
+    font-family: "Amiri";
+    font-size: 24px;
+    color: #333333;
   }
   
-.text{
-      color: #333333;
-      fill: none;
-  }
+.button {
+    border-radius: 4px;
+    width: 150px;
+    padding: 15px 32px;
+    display: block;
+    opacity: .9;
+    border: 0.1px solid #333333;
+    text-align: center;
+    background-color: #CCFFCC; 
+    color: white;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.tick {
+  font-family: "Josefin Sans", sans-serif;
+}  
+
+.text {
+    font-family: "Josefin Sans", sans-serif;
+    color: #333333;
+    fill: none;
+}
 
 .content {
     max-width: 800px;
@@ -61,75 +74,62 @@ ul {font-family: "Amiri";
     margin-bottom: 1em;
     width: 100%; 
 }
-
-.d3-tip {
-    line-height: 1;
-    font-weight: bold;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 2px;
-  }
  
 .highlight {
     opacity: 1;
   }
 
-
-
 .tooltip {
     opacity: 0;
-    transition: opacity 0.5s ease; /* added 12/23 when playing with SVG4  */
+    transition: opacity 0.5s ease; 
     position: absolute;
-    background: white;
+    background: #CCFFCC;
     padding: 5px;
-    border: 1px solid black;
+    z-index: 9950;
+    border: none;
+    border-radius: 4px;
+}
+
+#tooltip-number {
+  font-family: "Aboreto";
+  font-size: 18px;
+  color: #333333;
+}
+
+#tooltip-description {
+  font-family: "Josefin Sans Light";
+  font-size: 12px;
+  color: #333333;
 }
 
 #tooltip-svg5 {
   opacity: 0;
   position: absolute;
   z-index: 9999;
-  background: white;
+  background: #CCFFCC;
   padding: 5px;
-  border: 1px solid black;
+  border: none;
+  border-radius: 4px;
+}
+
+#tooltip-svg5 p {
+  font-family: "Josefin Sans Light";
+  font-size: 12px;
+  color: #333333;
 }
 
 #tooltip-svg6 {
   opacity: 0;
   position: absolute;
   z-index: 9999;
-  background: white;
+  background: #CCFFCC;
   padding: 5px;
-  border: 1px solid black;
+  border: none;
+  border-radius: 4px;
 }
 
-#compare-button {
-  display: inline-block;
-}
-
-#tooltip-container-svg8-firstrectangle {
-  opacity: 0;
-  position: absolute;
-  z-index: 9999;
-  background: white;
-  padding: 5px;
-  border: 1px solid black;
-  left: 0;
-  top: 0;
-}
-
-#tooltip-container-svg8-lastrectangle {
-  opacity: 0;
-  position: absolute;
-  z-index: 9999;
-  background: white;
-  padding: 5px;
-  border: 1px solid black;
-  left: 0;
-  top: 0;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #333333; /* Color of the thumb */
+#tooltip-svg6 p {
+  font-family: "Josefin Sans Light";
+  font-size: 12px;
+  color: #333333;
 }
