@@ -805,7 +805,7 @@ function startTransition() {
     .style("opacity", 1);
 }
 
-// SVG9a - Minimum Wage
+// SVG9a - Minimum Wage bubble
 const svg9a = d3
   .select("#svg-container-9a")
   .append("svg")
@@ -1290,10 +1290,10 @@ const scene13 = new ScrollMagic.Scene({
       .range([0, 200]);
 
     const simulation13 = d3.forceSimulation(wealth13)
-      .force("x", d3.forceX(450 + margin.left).strength(0.1)) // Center the bubbles with higher strength
-      .force("y", d3.forceY(500).strength(0.1)) // Adjust the vertical position with higher strength
-      .force("collide", d3.forceCollide(d => radiusScale13(d.wealth) + 2).iterations(2)); // Prevent overlapping with more iterations
-
+      .force("x", d3.forceX(450 + margin.left).strength(0.1)) // Center the bubbles 
+      .force("y", d3.forceY(500).strength(0.1)) // Adjust the vertical position 
+      .force("collide", d3.forceCollide(d => radiusScale13(d.wealth) + 2).iterations(2)); // Prevent overlapping 
+      
     const bubbles13 = svg13.selectAll("circle")
       .data(wealth13)
       .enter()
