@@ -1,0 +1,5 @@
+This website was bulit as a capstone project for the Masters of Science in Data Analysis and Visualization at the City University of New York Graduate Center in 2024
+
+The word “billion” is a mathematical abstraction related to “big,” but it is difficult to understand the vast difference in value between one million and one billion; even harder to understand the vast difference in purchasing power between one billion dollars, and the average U.S. yearly income. Perhaps most difficult to conceive of is what that purchasing power and huge mass of capital translates to in terms of power. This project blends design, text, facts, and figures into an interactive narrative website that helps the user better understand their position in relation to extreme wealth: https://whatdoesonebilliondollarslooklike.website/ 
+
+The site incorporates the ScrollMagic, D3, jQuery, and GSAP libraries. Data was collected from a variety of publicly available sources which can be found within the .csv files included here.  
